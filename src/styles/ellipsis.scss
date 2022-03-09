@@ -1,0 +1,8 @@
+@import 'widget';
+
+.ellipsis > .dot {
+  @include widget();
+  width: 1em;
+  height: 1em;
+  cursor: text;
+}

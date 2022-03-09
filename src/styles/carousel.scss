@@ -1,0 +1,25 @@
+@import 'widget';
+
+$carousel-content-height: 9em;
+
+.carousel {
+  @include widget($interactive: false);
+  & > .carousel-image-container {
+    display: grid;
+    & > img {
+      width: 100%;
+      border-radius: $widget-radius;
+      grid-area: 1 / 1 / 1 / 1;
+      opacity: 0;
+      transition: 1.0s;
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+  & > .carousel-content {
+    max-height: $carousel-content-height;
+    max-width: fit-content;
+    overflow-y: scroll;
+  }
+}

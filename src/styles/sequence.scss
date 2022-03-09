@@ -1,0 +1,11 @@
+@import 'colors';
+@import 'widget';
+
+.sequence {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) calc(50% - #{$accent-width} / 2),
+    $primary-color calc(50% - #{$accent-width} / 2), $primary-color calc(50% + #{$accent-width} / 2),
+    rgba(255, 255, 255, 0) calc(50% + #{$accent-width} / 2), rgba(255, 255, 255, 0)
+  );
+}

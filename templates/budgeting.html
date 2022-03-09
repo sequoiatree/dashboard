@@ -1,0 +1,44 @@
+{% import 'utils.html' as utils %}
+
+{{ utils.upload('transactions') }}
+
+<div class="d-flex flex-row">
+  <div class="flex-grow-1">
+    {{ utils.button_v2(
+      'regex',
+      (
+        None,
+        'html',
+        '<div class="d-flex flex-row font-family-monospace">^<div class="d-inline-block flex-grow-1">{}</div>$<div style="white-space: pre-wrap;"> &#8594; </div><div class="d-inline-block flex-grow-1">{}</div></div>'.format(utils.textbox('pattern').strip(), utils.textbox('alias').strip()),
+      ),
+      margin='r',
+      fullwidth=True,
+      enabled=False,
+      more='font-size-paragraph',
+    ) }}
+    <!-- TODO: Refactor utils.
+      * All utils should be post-processed to eliminate whitespace on the ends.
+        You shouldn't have to .strip() them manually.
+      * Refactor utils.button, paying close attention to margin / padding.
+      * Refactor utils.button, and other widgets, to accept content in the style
+        (id, encoding, context).
+    -->
+  </div>
+  {{ utils.button_v2(
+    'transactions',
+    (
+      None,
+      'html',
+      '<div class="d-flex flex-column justify-content-center h-100">View Transactions</div>',
+    ),
+    'javascript: void(0)',
+    margin='l',
+    more='font-size-paragraph',
+  ) }}
+  <!-- TODO: Give utils.button a flag pointer={True, False}.
+    This button doesn't need an href, but it has one so that the cursor appears
+    as a pointer. See button.scss for additional context. This can wait several
+    months or years, until you get around to making a shared framework for your
+    website, this web app, and Pyagram.
+  -->
+</div>

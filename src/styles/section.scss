@@ -1,0 +1,11 @@
+@import 'colors';
+
+.section:hover > .section-link {
+  color: rgba($primary-color, 1.0);
+  transition: 0.5s;
+}
+
+.section-link {
+  color: rgba($primary-color, 0.0);
+  transition: 0.5s;
+}

@@ -1,0 +1,17 @@
+@import 'widget';
+
+.button {
+  @include widget();
+  @at-root a#{&}:not([href]) {
+    cursor: text;
+  }
+}
+
+a.fas {
+  color: $secondary-color;
+  transition: 1.0s;
+  cursor: pointer;
+  &:hover, &.active {
+    color: $primary-color;
+  }
+}

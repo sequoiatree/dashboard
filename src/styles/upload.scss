@@ -1,0 +1,16 @@
+@import 'widget';
+
+.upload {
+  @include widget();
+  & > .upload-content {
+    overflow-y: scroll;
+    height: 15.35em;
+  }
+  .fs-upload-target {
+    width: 100%;
+    height: 100%;
+  }
+  .fs-upload-input {
+    display: none;
+  }
+}

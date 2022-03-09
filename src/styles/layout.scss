@@ -1,0 +1,9 @@
+$max-page-width-fixed: 960px;
+$max-page-width-ratio: 90vw;
+
+body {
+  overscroll-behavior-x: none;
+  .page-content {
+    max-width: min(960px, 90vw);
+  }
+}

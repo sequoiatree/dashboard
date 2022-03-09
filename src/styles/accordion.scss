@@ -1,0 +1,19 @@
+@import 'widget';
+
+.accordion-option-wrapper:not(.collapsed) > .accordion-option {
+  @include active-widget();
+}
+
+.accordion-option {
+  @include widget();
+}
+
+.accordion-content {
+  border-left: solid $accent-width $primary-color;
+  & > :first-child {
+    margin-top: 0 !important;
+  }
+  & > :last-child {
+    margin-bottom: 0 !important;
+  }
+}

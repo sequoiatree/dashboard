@@ -1,0 +1,77 @@
+@import 'colors';
+
+$serif-font: 'Arapey', serif;
+$sans-serif-font: 'Work Sans', sans-serif;
+$monospace-font: 'Source Code Pro', monospace;
+
+$title-font-size: 60.0pt;
+$section-font-size: 30.0pt;
+$subsection-font-size: 24.0pt;
+$subsubsection-font-size: 18.0pt;
+$widget-font-size: 13.5pt;
+$paragraph-font-size: 12.5pt;
+
+a, a:hover {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+.font-family-serif {
+  font-family: $serif-font;
+}
+
+.font-family-sans-serif {
+  font-family: $sans-serif-font;
+}
+
+.font-family-monospace {
+  font-family: $monospace-font;
+}
+
+.font-size-title {
+  font-size: $title-font-size;
+}
+
+.font-size-section {
+  font-size: $section-font-size;
+}
+
+.font-size-subsection {
+  font-size: $subsection-font-size;
+}
+
+.font-size-subsubsection {
+  font-size: $subsubsection-font-size;
+}
+
+.font-size-widget {
+  font-size: $widget-font-size;
+}
+
+.font-size-paragraph {
+  font-size: $paragraph-font-size;
+}
+
+.font-size-small {
+  font-size: 12pt;
+}
+
+.font-size-tiny {
+  font-size: 8pt;
+}
+
+.fas {
+  font-family: 'FontAwesome';
+}
+
+.text-reverse {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+
+.text-unselectable {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

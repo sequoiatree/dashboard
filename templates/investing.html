@@ -1,0 +1,66 @@
+{% import 'utils.html' as utils %}
+
+<div class="button active">
+  <div class="table-container m-3">
+    <table class="table">
+      <tr>
+        <td></td>
+        <td class="px-2 text-right">Target</td>
+        <td class="px-2 text-right">Actual</td>
+        <td class="px-2 text-right">Current Balance</td>
+        <td class="px-2 text-right">To Invest Now</td>
+        <td class="px-2 text-right">To Fully Rebalance</td>
+        <td class="px-2 text-right">Fully Rebalanced</td>
+      </tr>
+      {% for tag in ['VTI', 'VXUS'] %}
+        <tr class="font-family-monospace">
+          <td class="px-2 text-right">{{ tag }}</td>
+          <td class="px-2 text-right">{{ utils.textbox('target-{}'.format(tag), right=True, width=2).strip() }}%</td>
+          <td class="px-2 text-right"><span id="actual-{{ tag }}">-</span>%</td>
+          <td class="px-2 text-right">
+            {% if tag == 'VTI' %}
+              $<span id="current-balance-{{ tag }}">-</span>
+            {% else %}
+              ${{ utils.textbox('current-balance-{}'.format(tag), right=True, width=9).strip() }}
+            {% endif %}
+          </td>
+          <td class="px-2 text-right">$<span id="to-invest-{{ tag }}">-</span><span class="font-family-sans-serif">*</span></td>
+          <td class="px-2 text-right">$<span id="to-fully-rebalance-{{ tag }}">-</span></td>
+          <td class="px-2 text-right">$<span id="fully-rebalanced-{{ tag }}">-</span></td>
+        </tr>
+      {% endfor %}
+      <tr class="font-family-monospace">
+        <td class="px-2 text-right">Total</td>
+        <td class="px-2 text-right">100%</td>
+        <td class="px-2 text-right">100%</td>
+        <td class="px-2 text-right">${{ utils.textbox('current-balance-total', right=True, width=9).strip() }}</td>
+        <td class="px-2 text-right">${{ utils.textbox('to-invest-total', right=True, width=9).strip() }}</td>
+        <td class="px-2 text-right">$<span id="to-fully-rebalance-total">-</span></td>
+        <td class="px-2 text-right">$<span id="fully-rebalanced-total">-</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="d-flex flex-row text-justify my-3">
+  *
+  <div class="ml-1">
+    This allocation doesn't account for market under- or over-valuation. If one of these ETFs is presently under-valued (i.e. "on sale"), then take advantage of the situation and buy on the dip!
+  </div>
+</div>
+
+<!--
+
+Maintain a {ticker symbol: CSV} file. When you upload more stock data, it make
+sure there is no gap between the old data and the new data (or else it raises a
+pop-up message); otherwise it adds the new data to the old data and stores it
+all on your computer.
+
+You can implement any metrics here that you're interested in. In the future, if
+you become interested in a metric, you can add it on the back-end. For now, you
+only need one: how long has VXUS contiguously outperformed VTI by the definition
+laid out in your other Trello task? Keep a plot of smoothed-VTI vs smoothed-VXUS
+and a plot of the derivative of smoothed-VTI vs the derivative of smoothed-VXUS.
+Based on the difference, write "recommended allocation: 90% VTI, 10% VXUS" or
+"70% VTI, 30% VXUS".
+
+-->

@@ -1,0 +1,102 @@
+@import 'colors';
+
+.table-container {  // TODO: Move to a separate file; possibly abstract transactions-container.
+  overflow-x: scroll;
+  & > .table {
+    min-width: 100%;
+    width: max-content;
+    margin: 0;
+    tr {
+      &:nth-child(odd) {
+        background-color: $light-gray;
+      }
+      &:nth-child(even) {
+        background-color: white;
+      }
+      & > td {
+        border: none;
+        padding: 0;
+      }
+    }
+  }
+  // .transactions-table {
+  //   float: left;
+  //   width: max-content;
+  //   tr {
+  //     &:nth-child(odd) {
+  //       background-color: $light-gray;
+  //     }
+  //     &:nth-child(even) {
+  //       background-color: white;
+  //     }
+  //     & > td {
+  //       white-space: pre-wrap;
+  //       &.date {
+  //       }
+  //       &.amount {
+  //         &.positive {
+  //           color: $light-green;
+  //         }
+  //         &.negative {
+  //           color: red;
+  //         }
+  //       }
+  //       &.description {
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+.transactions-container {
+  & > .scroll-window {
+    overflow-x: scroll;
+    & > .transactions-table {
+      min-width: 100%;
+    }
+  }
+  .transactions-table {
+    float: left;
+    width: max-content;
+    tr {
+      &:nth-child(odd) {
+        background-color: $light-gray;
+      }
+      &:nth-child(even) {
+        background-color: white;
+      }
+      & > td {
+        white-space: pre-wrap;
+        &.date {
+        }
+        &.amount {
+          &.positive {
+            color: $light-green;
+          }
+          &.negative {
+            color: red;
+          }
+        }
+        &.account-ally {
+          background: purple;
+          width: 1ch;
+        }
+        & > .description {
+        }
+        & > .tag {
+          border-radius: 100vw;
+          vertical-align: middle;
+          &.tag-propertyexpenses {
+            background: #ffa5ff;
+          }
+          &.tag-spending {
+            background: #ffa5a5;
+          }
+        }
+        &.copy-button {
+          width: 0;
+        }
+      }
+    }
+  }
+}

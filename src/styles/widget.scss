@@ -1,0 +1,37 @@
+@import 'colors';
+@import 'text';
+
+$accent-width: 2px;
+$widget-radius: 23px;
+
+@mixin widget($interactive: true) {
+  color: black;
+  text-decoration: none;
+  font-size: $widget-font-size;
+  background: $background-color;
+  border: solid $accent-width $primary-color;
+  border-radius: $widget-radius;
+  transition: 1.0s;
+  @if $interactive {
+    cursor: pointer;
+    &:hover:not(.disabled), &.active {
+      @include active-widget();
+    }
+  }
+  & > * {
+    transition: 1.0s;
+  }
+  &.disabled > * {
+    visibility: hidden;
+    opacity: 0;
+  }
+  &:not(.disabled) > * {
+    opacity: 1;
+  }
+}
+
+@mixin active-widget() {
+  color: black;
+  text-decoration: none;
+  background: white;
+}

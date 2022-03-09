@@ -1,0 +1,10 @@
+@import 'widget';
+
+$nav-breakpoint: 640px;
+
+.nav-pills .nav-link, .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  @include widget();
+  @media only screen and (max-width: $nav-breakpoint) {
+    min-width: 33.3%;
+  }
+}
