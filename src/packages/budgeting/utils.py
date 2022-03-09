@@ -15,6 +15,10 @@ def aliases(  # TODO: Move to io.py.
 ) -> dict:
     '''...'''
 
+    if not os.path.exists(path('aliases.json')):  # TODO: Abstract into separate function after refactoring configs() too.
+        with open(path('aliases.json'), 'w') as f:
+            json.dump({}, f, indent=4)
+
     with open(path('aliases.json')) as f:
         return json.load(f)
 
@@ -23,7 +27,7 @@ def configs(  # TODO: Move to io.py.
 ) -> dict:
     '''...'''
 
-    with open(path('configs.json')) as f:
+    with open(path('configs.json')) as f:  # TODO: If doesn't exist, populate with default configs; add configs to .gitignore.
         return json.load(f)
 
 

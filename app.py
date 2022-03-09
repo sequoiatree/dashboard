@@ -67,7 +67,12 @@ def register_transactions(app):
 if __name__ == '__main__':
 
     app = flask.Flask(__name__)
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['UPLOAD_FOLDER'] = os.path.join(
+        os.path.dirname(__file__),
+        UPLOAD_FOLDER,
+    )
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.mkdir(app.config['UPLOAD_FOLDER'])
     for file in os.listdir(app.config['UPLOAD_FOLDER']):
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file))
 
