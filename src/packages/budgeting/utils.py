@@ -11,47 +11,6 @@ import pandas as pd
 from . import enums
 
 
-def aliases(  # TODO: Move to io.py.
-) -> dict:
-    '''...'''
-
-    if not os.path.exists(path('aliases.json')):  # TODO: Abstract into separate function after refactoring configs() too.
-        with open(path('aliases.json'), 'w') as f:
-            json.dump({}, f, indent=4)
-
-    with open(path('aliases.json')) as f:
-        return json.load(f)
-
-
-def configs(  # TODO: Move to io.py.
-) -> dict:
-    '''...'''
-
-    with open(path('configs.json')) as f:  # TODO: If doesn't exist, populate with default configs; add configs to .gitignore.
-        return json.load(f)
-
-
-def load_table(  # TODO: Move to io.py.
-    name: str,
-    columns: Dict[str, pd.Series],
-) -> pd.DataFrame:
-    '''...'''
-
-    try:
-        return pd.read_pickle(path(f'{name}.pickle'))
-    except FileNotFoundError:
-        return pd.DataFrame(columns)
-
-
-def save_table(  # TODO: Move to io.py.
-    name: str,
-    df: pd.DataFrame,
-) -> None:
-    '''...'''
-
-    return df.to_pickle(path(f'{name}.pickle'))
-
-
 def budget_status(
     budget: float,
     spending: float,
@@ -98,6 +57,10 @@ def identify_account(
     Raises:
         ...
     '''
+
+    # TODO: app.py should take a flag that tells you whether or not to throw error here or pass silently.
+    # TODO: It could also take data_dir and upload_dir flags so you could easily specify ~/Downloads as the upload_dir, and anything it doesn't recognize it could silently ignore.
+    # TODO: In which case, don't empty the uploads folder on app init. Instead just delete files that are successfully loaded into the Transactions object (but only delete after saving).
 
     if file == 'transactions.csv':
         return enums.Account.ally
@@ -154,7 +117,7 @@ def months_ago(
     return prev_month
 
 
-def register_regex(
+def register_regex(  # TODO: Move to io_manager.py (and refactor to use its `path` function!)
     pattern: str,
     alias: Optional[str],
 ) -> None:
@@ -184,7 +147,7 @@ def register_regex(
     os.rename(temporary_file, permanent_file)
 
 
-def register_tag_update(
+def register_tag_update(  # TODO: Move to io_manager.py (and refactor to use its `path` function!)
     datum: Dict[str, str],
     new_tag: str,
 ) -> None:

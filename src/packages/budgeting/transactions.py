@@ -8,10 +8,8 @@ import numpy as np
 import pandas as pd
 
 from . import enums
+from . import io_manager
 from . import utils
-
-
-CONFIGS = utils.configs()
 
 
 class Transactions:
@@ -19,8 +17,17 @@ class Transactions:
 
     def __init__(
         self,
+        *,
+        data_dir: str,
     ) -> None:
-        '''...'''
+        '''...
+
+        Args:
+            data_dir:
+
+        Returns:
+            None.
+        '''
 
         transactions_columns = {
             'account': pd.Series(dtype=np.dtype('str')),
@@ -32,8 +39,18 @@ class Transactions:
             **transactions_columns,
             'tag': pd.Series(dtype=np.dtype('str')),
         }
-        self._transactions = utils.load_table('transactions', transactions_columns)
-        self._saved_tags = utils.load_table('saved_tags', saved_tags_columns)
+
+        self._io_manager = io_manager.IOManager(data_dir)
+        self._aliases = self._io_manager.load(enums.Data.aliases)
+        self._configs = self._io_manager.load(enums.Data.configs)
+        self._transactions = self._io_manager.load(
+            enums.Data.transactions,
+            columns=transactions_columns,
+        )
+        self._saved_tags = self._io_manager.load(
+            enums.Data.saved_tags,
+            columns=saved_tags_columns,
+        )
 
         self._postprocessed_transactions = None
 
@@ -85,7 +102,7 @@ class Transactions:
         if self._postprocessed_transactions is None:
             self._postprocessed_transactions = (
                 self._transactions
-                .pipe(with_clean_descriptions)
+                .pipe(with_clean_descriptions, aliases=self._aliases)  # TODO: Move with_clean_descriptions and with_saved_tags into this class so they can access self?
                 .pipe(with_tags, saved_tags=self._saved_tags)
                 .sort_values('date', ascending=False)
             )
@@ -99,7 +116,7 @@ class Transactions:
 
         transactions = self.transactions().pipe(select_recent, since=1)
 
-        monthly_budget = CONFIGS['budget']
+        monthly_budget = self._configs['budget']
         current_month = utils.months_ago(0)
 
         total = lambda transactions: transactions['amount'].sum()
@@ -109,7 +126,8 @@ class Transactions:
             'description': description,
         }
 
-        def ytd_metrics() -> pd.DataFrame:
+        def ytd_metrics(
+        ) -> pd.DataFrame:
             '''...
 
             Returns:
@@ -192,8 +210,8 @@ class Transactions:
     ) -> None:
         '''...'''
 
-        utils.save_table('transactions', self._transactions)
-        utils.save_table('saved_tags', self._saved_tags)
+        self._io_manager.save(enums.Data.saved_tags, table=self._saved_tags)
+        self._io_manager.save(enums.Data.transactions, table=self._transactions)
 
     def to_dict(
         self,
@@ -242,7 +260,7 @@ class Transactions:
         }
 
 
-def parse_transactions_from_ally(  # TODO: Move to utils or enums.
+def parse_transactions_from_ally(  # TODO: Move to utils or enums. Or dedicated parsing file?
     transactions: pd.DataFrame,
 ) -> pd.DataFrame:
     '''...'''  # return [str account, pd.Timestamp date, float amount, str description]
@@ -264,17 +282,18 @@ def parse_transactions_from_ally(  # TODO: Move to utils or enums.
 
 def with_clean_descriptions(  # TODO: Move to utils.
     transactions: pd.DataFrame,
+    aliases: Dict[str, str],
 ) -> pd.DataFrame:
     '''...
 
     Args:
         transactions:
+        aliases:
 
     Returns:
         ...
     '''
 
-    aliases = utils.aliases()
     patterns_to_sub = {}
     patterns_to_del = []
     for pattern, alias in aliases.items():

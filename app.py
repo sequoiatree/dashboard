@@ -7,7 +7,9 @@ import werkzeug.utils
 
 from src.packages import budgeting
 
-UPLOAD_FOLDER = './uploads'
+ROOT_DIR = os.path.dirname(__file__)
+DATA_DIR = os.path.join(ROOT_DIR, 'data')
+UPLOAD_DIR = os.path.join(ROOT_DIR, 'uploads')
 
 
 def register_endpoints(app):
@@ -43,7 +45,7 @@ def register_upload(app):
 
         if file is not None:
             file.save(os.path.join(
-                app.config['UPLOAD_FOLDER'],
+                UPLOAD_DIR,
                 werkzeug.utils.secure_filename(file.filename),
             ))
 
@@ -57,7 +59,8 @@ def register_transactions(app):
     def transactions():
 
         transactions = budgeting.parse_transactions(
-            app.config['UPLOAD_FOLDER'],
+            DATA_DIR,
+            UPLOAD_DIR,
             **flask.request.get_json(),
         )
 
@@ -67,14 +70,16 @@ def register_transactions(app):
 if __name__ == '__main__':
 
     app = flask.Flask(__name__)
-    app.config['UPLOAD_FOLDER'] = os.path.join(
-        os.path.dirname(__file__),
-        UPLOAD_FOLDER,
-    )
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.mkdir(app.config['UPLOAD_FOLDER'])
-    for file in os.listdir(app.config['UPLOAD_FOLDER']):
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file))
+
+    for directory, should_empty in {
+        (DATA_DIR, False),
+        (UPLOAD_DIR, True),
+    }:
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+        if should_empty:
+            for file in os.listdir(directory):
+                os.remove(os.path.join(directory, file))
 
     register_endpoints(app)
 

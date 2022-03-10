@@ -4,8 +4,7 @@
 node_modules/
 
 # Data
-*.pickle
-aliases.json
+data/*
 uploads/*
 
 # Front-end
