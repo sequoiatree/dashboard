@@ -5,7 +5,6 @@ from typing import *
 from . import io
 from . import parsing
 from . import transactions
-from . import utils
 
 
 def request_transactions(
@@ -31,9 +30,9 @@ def request_transactions(
     parser = parsing.Parser(upload_dir)
 
     if regex is not None:
-        utils.register_regex(io_manager, **regex)
+        io.register_regex(io_manager, **regex)
     if tag_update is not None:
-        utils.register_tag_update(io_manager, **tag_update)
+        io.register_tag_update(io_manager, **tag_update)
 
     all_transactions = transactions.Transactions(io_manager)
     for file in parser:

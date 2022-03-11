@@ -6,12 +6,8 @@ from typing import *
 
 import pandas as pd
 
-from . import constants
-from . import enums
-from . import io
 
-
-def budget_status(
+def budget_status(  # TODO: Perhaps define this in the method where it's used. It doesn't belong in utils bc it's not generally useful.
     budget: float,
     spending: float,
 ) -> Tuple[float, str]:
@@ -92,91 +88,6 @@ def months_ago(
     prev_month = (curr_month - 1 - months_ago) % 12 + 1
 
     return prev_month
-
-
-def register_regex(
-    io_manager: io.IOManager,
-    pattern: str,
-    alias: Optional[str],
-) -> None:
-    '''...
-
-    Args:
-        pattern:
-        alias:
-
-    Returns:
-        None.
-    '''
-
-    pattern = f'^{pattern}$'
-    if not is_valid_regex(pattern):
-        return
-
-    def update_aliases(
-        aliases: Dict[str, str],
-    ) -> Dict[str, str]:
-        '''...'''
-
-        aliases.update({pattern: alias and alias.upper()})
-        return aliases
-
-    io_manager.update(enums.Data.aliases, update_aliases)
-
-
-def register_tag_update(
-    io_manager: io.IOManager,
-    serialized_datum: Dict[str, str],
-    new_tag: str,
-) -> None:
-    '''...
-
-    Args:
-        serialized_datum:
-        new_tag:
-
-    Returns:
-        None.
-    '''
-
-    def update_saved_tags(
-        saved_tags: pd.DataFrame,
-    ) -> pd.DataFrame:
-        '''...'''
-
-        year = datetime.date.today().year
-        date = datetime.datetime.strptime(serialized_datum['date'], '%a, %b. %d')
-        datum = pd.DataFrame(
-            {
-                'account': serialized_datum['account'],
-                'date': pd.Timestamp(datetime.date(year, date.month, date.day)),
-                'amount': float(serialized_datum['amount']),
-                'description': serialized_datum['description'],
-                'tag': new_tag,
-            },
-            index=[0],
-        )
-
-        saved_tags_to_keep = (
-            saved_tags
-            .merge(datum.drop('tag', axis=1), how='outer', indicator=True)
-            .loc[lambda union: union['_merge'] == 'left_only']
-            .drop('_merge', axis=1)
-        )
-
-        return (
-            saved_tags_to_keep
-            .append(datum)
-            .reset_index(drop=True)
-        )
-
-    io_manager.update(
-        enums.Data.saved_tags,
-        update_saved_tags,
-        load_options=dict(
-            columns=constants.SAVED_TAGS_COLUMNS,
-        ),
-    )
 
 
 def stringify_columns(
