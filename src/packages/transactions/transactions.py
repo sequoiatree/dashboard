@@ -120,13 +120,20 @@ class Transactions:
             'description': description,
         }
 
+        def budget_status(
+            budget: float,
+            spending: float,
+        ) -> Tuple[float, str]:
+            '''...'''
+
+            buffer = budget - abs(spending)
+            status = 'OVER BUDGET' if buffer < 0 else 'WITHIN BUDGET'
+
+            return buffer, status
+
         def ytd_metrics(
         ) -> pd.DataFrame:
-            '''...
-
-            Returns:
-                ...
-            '''
+            '''...'''
 
             ytd_budget = monthly_budget * current_month
 
@@ -145,20 +152,13 @@ class Transactions:
                     for tag, total in totals.items()
                     if tag is not enums.Tag.spending
                 ],
-                datum(*utils.budget_status(ytd_budget, spending)),
+                datum(*budget_status(ytd_budget, spending)),
             ])
 
         def month_metrics(
             month: int,
         ) -> pd.DataFrame:
-            '''...
-
-            Args:
-                month:
-
-            Returns:
-                ...
-            '''
+            '''...'''
 
             for_month = lambda transactions: transactions.pipe(
                 select_recent,
@@ -181,7 +181,7 @@ class Transactions:
                     datum(total, tag.value.upper())
                     for tag, total in totals.items()
                 ],
-                datum(*utils.budget_status(monthly_budget, spending)),
+                datum(*budget_status(monthly_budget, spending)),
             ])
 
         metrics = [

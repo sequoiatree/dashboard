@@ -4,19 +4,6 @@ import datetime
 import regex as re
 from typing import *
 
-import pandas as pd
-
-
-def budget_status(  # TODO: Perhaps define this in the method where it's used. It doesn't belong in utils bc it's not generally useful.
-    budget: float,
-    spending: float,
-) -> Tuple[float, str]:
-
-    buffer = budget - abs(spending)
-    status = 'OVER BUDGET' if buffer < 0 else 'WITHIN BUDGET'
-
-    return buffer, status
-
 
 def error_message(
     *message: str,
