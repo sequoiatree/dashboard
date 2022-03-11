@@ -65,9 +65,10 @@ def identify_account(
 
     if file == 'transactions.csv':
         return enums.Account.ally
-    # if ____:
+    # elif ____:
     #     return enums.Account.____
-    raise ValueError(...)  # TODO
+    else:
+        raise ValueError(...)  # TODO
 
 
 def is_valid_regex(
@@ -214,10 +215,11 @@ def stringify_columns(
 
         if pd.api.types.is_datetime64_dtype(column):
             return column.apply(formate_date)
-        if pd.api.types.is_float_dtype(column):
+        elif pd.api.types.is_float_dtype(column):
             return column.apply('{:.2f}'.format)
-        if pd.api.types.is_string_dtype(column):
+        elif pd.api.types.is_string_dtype(column):
             return column
-        raise TypeError(...)  # TODO
+        else:
+            raise TypeError(...)  # TODO
 
     return df.apply(stringify_column)

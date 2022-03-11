@@ -67,13 +67,16 @@ class IOManager:
     ) -> str:
         '''...'''
 
-        if target is enums.Data.aliases:  # TODO: Convert all if/if/if chains into if/elif/else chains.
-            return self._save_json(target.value, to_save, **options)
-        if target is enums.Data.saved_tags:
-            return self._save_table(target.value, to_save, **options)
-        if target is enums.Data.transactions:
-            return self._save_table(target.value, to_save, **options)
-        raise ValueError()  # TODO
+        if target is enums.Data.aliases:
+            path = self._save_json(target.value, to_save, **options)
+        elif target is enums.Data.saved_tags:
+            path = self._save_table(target.value, to_save, **options)
+        elif target is enums.Data.transactions:
+            path = self._save_table(target.value, to_save, **options)
+        else:
+            raise ValueError()  # TODO
+
+        return path
 
     def update(
         self,

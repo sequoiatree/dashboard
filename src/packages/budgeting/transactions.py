@@ -224,19 +224,20 @@ class Transactions:
                     .pipe(utils.stringify_columns)
                     .to_dict(orient='records')
                 )
-            if isinstance(object, dict):
+            elif isinstance(object, dict):
                 return {
                     key: serialize(value)
                     for key, value in object.items()
                 }
-            if isinstance(object, list):
+            elif isinstance(object, list):
                 return [
                     serialize(value)
                     for value in object
                 ]
-            if isinstance(object, str):
+            elif isinstance(object, str):
                 return object
-            raise TypeError(...)  # TODO
+            else:
+                raise TypeError(...)  # TODO
 
         return {
             'transactions': serialize(
