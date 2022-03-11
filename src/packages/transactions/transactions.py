@@ -221,7 +221,7 @@ class Transactions:
         })
 
 
-def with_clean_descriptions(  # TODO: Move to utils.
+def with_clean_descriptions(
     transactions: pd.DataFrame,
     aliases: Dict[str, Optional[str]],
 ) -> pd.DataFrame:
@@ -280,7 +280,7 @@ def with_clean_descriptions(  # TODO: Move to utils.
     return transactions
 
 
-def with_tags(  # TODO: Move to utils.
+def with_tags(
     transactions: pd.DataFrame,
     saved_tags: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -316,7 +316,7 @@ def with_tags(  # TODO: Move to utils.
     )
 
 
-def select_recent(  # TODO: Move to utils.
+def select_recent(
     transactions: pd.DataFrame,
     *,
     since: int,
