@@ -1,6 +1,7 @@
-'''...'''
+'''Da$hboard: A personal finance dashboard for budgeting and investing.'''
 
 import os
+from typing import *
 
 import flask
 import werkzeug.utils
@@ -13,21 +14,26 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 UPLOAD_DIR = os.path.join(ROOT_DIR, 'uploads')
 
 
-def register_endpoints(app):
-    '''...'''
+def register_endpoints(
+    app: flask.Flask,
+) -> None:
+    '''Create endpoints.'''
 
     register_root(app)
     register_upload(app)
     register_transactions(app)
 
 
-def register_root(app):
-    '''...'''
+def register_root(
+    app: flask.Flask,
+) -> None:
+    '''Create an endpoint for the main page.'''
 
     @app.route('/')
-    def root():
+    def root() -> Any:
+        '''Serve the main page.'''
 
-        return flask.render_template(
+        template = flask.render_template(
             'index.html',
             nav_options=[
                 ('budgeting', 'Budgeting', 'template', None),
@@ -35,12 +41,17 @@ def register_root(app):
             ],
         )
 
+        return flask.make_response(template)
 
-def register_upload(app):
-    '''...'''
+
+def register_upload(
+    app: flask.Flask,
+) -> None:
+    '''Create an endpoint for upload requests.'''
 
     @app.route('/upload', methods=['POST'])
-    def upload():
+    def upload() -> Any:
+        '''Handle a request to upload files.'''
 
         file = flask.request.files.get('file')
 
@@ -53,11 +64,14 @@ def register_upload(app):
         return flask.make_response('')
 
 
-def register_transactions(app):
-    '''...'''
+def register_transactions(
+    app: flask.Flask,
+) -> None:
+    '''Create an endpoint for transaction data requests.'''
 
     @app.route('/transactions', methods=['POST'])
-    def transactions():
+    def transactions() -> Any:
+        '''Handle a request for transaction data.'''
 
         transactions = budgeting.request_transactions(
             DATA_DIR,
