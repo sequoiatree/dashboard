@@ -1,6 +1,7 @@
 '''...'''
 
 import os
+from typing import *
 
 import pandas as pd
 
@@ -8,30 +9,68 @@ from . import constants
 from . import enums
 
 
-def parse_transactions(
-    upload_dir: str,
-    file: str,
-):
+class Parser:
     '''...'''
 
-    path = os.path.join(upload_dir, file)
-    try:
-        transactions = pd.read_csv(path, dtype='string')
-    except Exception as exception:
-        raise ValueError() from exception  # TODO - include a helpful error message
+    def __init__(
+        self,
+        upload_dir: str,
+    ) -> None:
+        '''...'''
 
-    account = identify_account(file, transactions)
+        self._parsed_files = set()
+        self._upload_dir = upload_dir
 
-    if account is enums.Account.ally:
-        transactions = parse_transactions_from_ally(transactions)
-    # elif account is enums.Account.____:
-    #     transactions = parse_transactions_from_____(transactions)
-    else:
-        raise ValueError(...)  # TODO
+    def __iter__(
+        self,
+    ) -> Iterator[str]:
+        '''...'''
 
-    transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
+        return iter(os.listdir(self._upload_dir))
 
-    return transactions
+    def clear(
+        self,
+    ) -> None:
+        '''...'''
+
+        for file in self._parsed_files:
+            os.remove(self._path(file))
+
+        self._parsed_files.clear()
+
+    def parse_transactions(
+        self,
+        file: str,
+    ) -> pd.DataFrame:
+        '''...'''
+
+        try:
+            transactions = pd.read_csv(self._path(file), dtype='string')
+        except Exception as exception:
+            raise ValueError() from exception  # TODO - include a helpful error message
+
+        account = identify_account(file, transactions)
+
+        if account is enums.Account.ally:
+            transactions = parse_transactions_from_ally(transactions)
+        # elif account is enums.Account.____:
+        #     transactions = parse_transactions_from_____(transactions)
+        else:
+            raise ValueError(...)  # TODO
+
+        transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
+
+        self._parsed_files.add(file)
+
+        return transactions
+
+    def _path(
+        self,
+        file: str,
+    ) -> str:
+        '''...'''
+
+        return os.path.join(self._upload_dir, file)
 
 
 def identify_account(
@@ -50,8 +89,6 @@ def identify_account(
     Raises:
         ...
     '''
-
-    # TODO: Maybe don't empty the uploads folder on app init. Instead just delete files that are successfully loaded into the Transactions object (but only delete after saving).
 
     if file == 'transactions.csv':
         return enums.Account.ally

@@ -72,15 +72,12 @@ if __name__ == '__main__':
 
     app = flask.Flask(__name__)
 
-    for directory, should_empty in {
-        (DATA_DIR, False),
-        (UPLOAD_DIR, True),
+    for directory in {
+        DATA_DIR,
+        UPLOAD_DIR,
     }:
         if not os.path.exists(directory):
             os.mkdir(directory)
-        if should_empty:
-            for file in os.listdir(directory):
-                os.remove(os.path.join(directory, file))
 
     register_endpoints(app)
 

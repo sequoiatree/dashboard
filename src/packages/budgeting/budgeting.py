@@ -1,9 +1,8 @@
 '''...'''
 
-import os
 from typing import *
 
-from . import io_manager
+from . import io_manager  # TODO: Rename to io
 from . import parsing
 from . import transactions
 from . import utils
@@ -29,6 +28,7 @@ def parse_transactions(  # TODO: Rename!
     '''
 
     transactions_io_manager = io_manager.IOManager(data_dir)
+    parser = parsing.Parser(upload_dir)
 
     if regex is not None:
         utils.register_regex(transactions_io_manager, **regex)
@@ -36,10 +36,11 @@ def parse_transactions(  # TODO: Rename!
         utils.register_tag_update(transactions_io_manager, **tag_update)
 
     all_transactions = transactions.Transactions(transactions_io_manager)
-    for file in os.listdir(upload_dir):
-        new_transactions = parsing.parse_transactions(upload_dir, file)
+    for file in parser:
+        new_transactions = parser.parse_transactions(file)
         all_transactions.add_transactions(new_transactions)
 
     all_transactions.save()
+    parser.clear()
 
     return all_transactions
