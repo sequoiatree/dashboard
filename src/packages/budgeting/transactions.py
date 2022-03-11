@@ -58,7 +58,6 @@ class Transactions:
 
     def add_transactions(
         self,
-        account: enums.Account,
         transactions: pd.DataFrame,
     ) -> None:
         '''...
@@ -73,15 +72,6 @@ class Transactions:
         Raises:
             ...
         '''
-
-        if account is enums.Account.ally:
-            transactions = parse_transactions_from_ally(transactions)
-        # elif account is enums.Account.____:
-        #     transactions = parse_transactions_from_____(transactions)
-        else:
-            raise ValueError(...)  # TODO
-
-        transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
 
         new_transactions = (
             self._transactions
@@ -261,24 +251,6 @@ class Transactions:
             'metrics': serialize(self.metrics()),
             'tags': [tag.value for tag in enums.Tag],
         }
-
-
-def parse_transactions_from_ally(  # TODO: Move to utils or enums. Or dedicated parsing file?
-    transactions: pd.DataFrame,
-) -> pd.DataFrame:
-    '''...'''
-
-    transactions.columns = transactions.columns.str.strip()
-    transactions.columns = transactions.columns.str.lower()
-
-    transactions['account'] = 'ally'
-
-    return transactions[[
-        'account',
-        'date',
-        'amount',
-        'description',
-    ]]
 
 
 def with_clean_descriptions(  # TODO: Move to utils.

@@ -3,14 +3,13 @@
 import os
 from typing import *
 
-import pandas as pd
-
 from . import io_manager
+from . import parsing
 from . import transactions
 from . import utils
 
 
-def parse_transactions(
+def parse_transactions(  # TODO: Rename!
     data_dir: str,
     upload_dir: str,
     *,
@@ -38,13 +37,8 @@ def parse_transactions(
 
     all_transactions = transactions.Transactions(transactions_io_manager)
     for file in os.listdir(upload_dir):
-        try:
-            path = os.path.join(upload_dir, file)
-            new_transactions = pd.read_csv(path, dtype='string')  # TODO: abtract this try/except into a dedicated parsing file, along with parse_transactions_from_ally etc
-        except Exception as exception:
-            raise ValueError() from exception  # TODO - include a helpful error message
-        account = utils.identify_account(file, new_transactions)
-        all_transactions.add_transactions(account, new_transactions)
+        new_transactions = parsing.parse_transactions(upload_dir, file)
+        all_transactions.add_transactions(new_transactions)
 
     all_transactions.save()
 

@@ -41,33 +41,6 @@ def formate_date(
     return f'{weekday}, {month}. {day}'
 
 
-def identify_account(
-    file: str,
-    transactions: pd.DataFrame,
-) -> enums.Account:
-    '''...
-
-    Args:
-        file:
-        transactions:
-
-    Returns:
-        ...
-
-    Raises:
-        ...
-    '''
-
-    # TODO: Maybe don't empty the uploads folder on app init. Instead just delete files that are successfully loaded into the Transactions object (but only delete after saving).
-
-    if file == 'transactions.csv':
-        return enums.Account.ally
-    # elif ____:
-    #     return enums.Account.____
-    else:
-        raise ValueError(...)  # TODO
-
-
 def is_valid_regex(
     pattern: str,
 ) -> bool:
