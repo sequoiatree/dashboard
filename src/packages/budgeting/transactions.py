@@ -4,6 +4,7 @@ import calendar
 import datetime
 from typing import *
 
+import numpy as np
 import pandas as pd
 
 from . import constants
@@ -70,7 +71,7 @@ class Transactions:
         new_transactions = (
             self._transactions
             .merge(transactions, how='outer', indicator=True)
-            .where(lambda union: union['_merge'] == 'right_only')
+            .where(lambda union: union['_merge'] == 'right_only')  # TODO: Get rid of all .where(), .mask(), and .dropna() as they often behave unexpectedly. Use indexing instead.
             .dropna()
             .drop('_merge', axis=1)
         )
@@ -270,7 +271,7 @@ def parse_transactions_from_ally(  # TODO: Move to utils or enums. Or dedicated 
 
 def with_clean_descriptions(  # TODO: Move to utils.
     transactions: pd.DataFrame,
-    aliases: Dict[str, str],
+    aliases: Dict[str, Optional[str]],
 ) -> pd.DataFrame:
     '''...
 
@@ -314,17 +315,15 @@ def with_clean_descriptions(  # TODO: Move to utils.
         )
     transactions = transactions.assign(clean_description=clean_descriptions)
 
-    for pattern in patterns_to_del:
-        transactions = (
-            transactions
-            .mask(clean_descriptions.str.contains(pattern, regex=True))
-        )
-    if patterns_to_del:
-        transactions = (
-            transactions
-            .dropna()
-            .reset_index(drop=True)
-        )
+    data_to_del = np.logical_or.reduce(
+        [
+            clean_descriptions.str.contains(pattern, regex=True)
+            for pattern in patterns_to_del
+        ],
+        dtype=bool,
+    )
+    if isinstance(data_to_del, np.ndarray):
+        transactions = transactions[~data_to_del].reset_index(drop=True)
 
     return transactions
 
@@ -392,8 +391,6 @@ def select_recent(  # TODO: Move to utils.
     dates = transactions['date'].map(lambda date: date.date())
     months = transactions['date'].map(lambda date: date.month)
 
-    mask = dates >= cutoff
-    if not to_present:
-        mask &= months == cutoff.month
+    data_to_keep = (dates >= cutoff) & (to_present or months == cutoff.month)
 
-    return transactions[mask]
+    return transactions[data_to_keep]
