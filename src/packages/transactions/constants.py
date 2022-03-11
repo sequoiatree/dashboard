@@ -1,4 +1,4 @@
-'''...'''
+'''Constants.'''
 
 from typing import *
 
