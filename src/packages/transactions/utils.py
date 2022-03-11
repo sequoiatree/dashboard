@@ -34,25 +34,6 @@ def error_message(
     )
 
 
-def formate_date(
-    date: pd.Timestamp,
-) -> str:
-    '''...
-
-    Args:
-        date:
-
-    Returns:
-        ...
-    '''
-
-    weekday = date.strftime('%a')
-    month = date.strftime('%b')
-    day = date.strftime('%d').lstrip('0').rjust(2)
-
-    return f'{weekday}, {month}. {day}'
-
-
 def is_valid_regex(
     pattern: str,
 ) -> bool:
@@ -88,39 +69,3 @@ def months_ago(
     prev_month = (curr_month - 1 - months_ago) % 12 + 1
 
     return prev_month
-
-
-def stringify_columns(
-    df: pd.DataFrame,
-) -> pd.DataFrame:
-    '''...
-
-    Args:
-        df:
-
-    Returns:
-        ...
-
-    Raises:
-        ...
-    '''
-
-    def stringify_column(
-        column: pd.Series,
-    ) -> pd.Series:
-        '''...'''
-
-        if pd.api.types.is_datetime64_dtype(column):
-            return column.apply(formate_date)
-        elif pd.api.types.is_float_dtype(column):
-            return column.apply('{:.2f}'.format)
-        elif pd.api.types.is_string_dtype(column):
-            return column
-        else:
-            raise TypeError(error_message(
-                'Could not stringify column {name} with dtype {dtype}.',
-                name=column.name,
-                dtype=column.dtype,
-            ))
-
-    return df.apply(stringify_column)
