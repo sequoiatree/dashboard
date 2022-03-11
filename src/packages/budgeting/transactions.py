@@ -30,7 +30,7 @@ class Transactions:
         '''
 
         self._io_manager = io_manager
-        self._aliases = self._io_manager.load(enums.Data.aliases)
+        self._aliases = self._io_manager.load(enums.Data.aliases)  # TODO: Load lazily instead of loading all at the beginning.
         self._configs = self._io_manager.load(enums.Data.configs)
         self._transactions = self._io_manager.load(
             enums.Data.transactions,

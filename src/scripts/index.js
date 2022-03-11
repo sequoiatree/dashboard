@@ -336,14 +336,6 @@ function initInvestingTable() {
         toInvestTotal,
     ]).each(function(i, textbox) {
 
-        // textbox.on('input', () => textbox.val(textbox.val().replaceAll(',', '')));
-        // validateInput(textbox, text => isNumber(text, 2));
-        // textbox.on('input', function() {
-        //     var value = get(textbox);
-        //     if (value !== undefined) {
-        //         set(textbox, value);
-        //     }
-        // });
         textbox.on('input', updateTable);
 
     });
