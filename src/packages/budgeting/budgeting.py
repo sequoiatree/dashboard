@@ -38,7 +38,11 @@ def parse_transactions(
 
     all_transactions = transactions.Transactions(transactions_io_manager)
     for file in os.listdir(upload_dir):
-        new_transactions = pd.read_csv(os.path.join(upload_dir, file))  # TODO: Use io_manager to do this.
+        try:
+            path = os.path.join(upload_dir, file)
+            new_transactions = pd.read_csv(path, dtype='string')  # TODO: abtract this try/except into a dedicated parsing file, along with parse_transactions_from_ally etc
+        except Exception as exception:
+            raise ValueError() from exception  # TODO - include a helpful error message
         account = utils.identify_account(file, new_transactions)
         all_transactions.add_transactions(account, new_transactions)
 

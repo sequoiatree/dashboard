@@ -81,6 +81,8 @@ class Transactions:
         else:
             raise ValueError(...)  # TODO
 
+        transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
+
         new_transactions = (
             self._transactions
             .merge(transactions, how='outer', indicator=True)
@@ -264,21 +266,19 @@ class Transactions:
 def parse_transactions_from_ally(  # TODO: Move to utils or enums. Or dedicated parsing file?
     transactions: pd.DataFrame,
 ) -> pd.DataFrame:
-    '''...'''  # return [str account, pd.Timestamp date, float amount, str description]
+    '''...'''
 
     transactions.columns = transactions.columns.str.strip()
     transactions.columns = transactions.columns.str.lower()
 
     transactions['account'] = 'ally'
 
-    transactions = transactions[[
+    return transactions[[
         'account',
         'date',
         'amount',
         'description',
     ]]
-
-    return transactions.assign(date=pd.to_datetime(transactions['date']))
 
 
 def with_clean_descriptions(  # TODO: Move to utils.
