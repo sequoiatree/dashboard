@@ -99,7 +99,7 @@ def identify_account(
         ...
     '''
 
-    if file == 'transactions.csv':  # TODO: Make this more robust against non-Ally files, e.g. check original column names too. Write an is_ally() function, possibly abstract into id.py.
+    if file == 'transactions.csv':  # TODO: Make this more robust against non-Ally files, e.g. check original column names too. Write an matches_ally() function, possibly abstract into id.py.
         return enums.Account.ally
     # elif ____:
     #     return enums.Account.____

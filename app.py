@@ -79,7 +79,7 @@ def register_transactions(
             **flask.request.get_json(),
         )
 
-        return flask.make_response(transactions.to_dict())
+        return flask.make_response(transactions.to_json())
 
 
 if __name__ == '__main__':

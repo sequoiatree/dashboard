@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from . import constants
+from . import encoders
 from . import enums
 from . import io
 from . import utils
@@ -205,52 +206,19 @@ class Transactions:
 
         self._io_manager.save(enums.Data.transactions, self._transactions)
 
-    def to_dict(
+    def to_json(
         self,
     ) -> str:
         '''...'''
 
-        def serialize(  # TODO: Replace this with a simple custom encoder. Search for "Extending JSONEncoder" on https://docs.python.org/3/library/json.html.
-            object: Any,
-        ) -> Any:
-            '''...
-
-            Args:
-                object:
-
-            Returns:
-                ...
-            '''
-
-            if isinstance(object, pd.DataFrame):
-                return (
-                    object
-                    .pipe(utils.stringify_columns)
-                    .to_dict(orient='records')
-                )
-            elif isinstance(object, dict):
-                return {
-                    key: serialize(value)
-                    for key, value in object.items()
-                }
-            elif isinstance(object, list):
-                return [
-                    serialize(value)
-                    for value in object
-                ]
-            elif isinstance(object, str):
-                return object
-            else:
-                raise TypeError(...)
-
-        return {
-            'transactions': serialize(
+        return encoders.DataFrameJSONEncoder().encode({
+            'transactions': (
                 self.transactions()
                 .pipe(select_recent, since=utils.months_ago(1))
             ),
-            'metrics': serialize(self.metrics()),
+            'metrics': self.metrics(),
             'tags': [tag.value for tag in enums.Tag],
-        }
+        })
 
 
 def with_clean_descriptions(  # TODO: Move to utils.
