@@ -77,7 +77,7 @@ class Transactions:
         new_transactions = (
             self._transactions
             .merge(transactions, how='outer', indicator=True)
-            .loc[lambda union: union['_merge'] == 'right_only']
+            .loc[lambda merged: merged['_merge'] == 'right_only']
             .drop('_merge', axis=1)
         )
 
