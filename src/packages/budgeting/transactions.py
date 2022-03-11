@@ -9,7 +9,7 @@ import pandas as pd
 
 from . import constants
 from . import enums
-from . import io_manager
+from . import io
 from . import utils
 
 
@@ -18,7 +18,7 @@ class Transactions:
 
     def __init__(
         self,
-        io_manager: io_manager.IOManager,
+        io_manager: io.IOManager,
     ) -> None:
         '''...
 

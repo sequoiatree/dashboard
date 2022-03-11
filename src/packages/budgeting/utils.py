@@ -8,7 +8,7 @@ import pandas as pd
 
 from . import constants
 from . import enums
-from . import io_manager
+from . import io
 
 
 def budget_status(
@@ -79,7 +79,7 @@ def months_ago(
 
 
 def register_regex(
-    io_manager: io_manager.IOManager,
+    io_manager: io.IOManager,
     pattern: str,
     alias: Optional[str],
 ) -> None:
@@ -109,7 +109,7 @@ def register_regex(
 
 
 def register_tag_update(
-    io_manager: io_manager.IOManager,
+    io_manager: io.IOManager,
     serialized_datum: Dict[str, str],
     new_tag: str,
 ) -> None:
