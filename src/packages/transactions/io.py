@@ -9,6 +9,7 @@ import pandas as pd
 from . import configs
 from . import constants
 from . import enums
+from . import utils
 
 
 class IOManager:
@@ -52,7 +53,10 @@ class IOManager:
         elif target is enums.Data.transactions:
             contents = self._load_table(target.value, **options)
         else:
-            raise ValueError()  # TODO
+            raise ValueError(utils.error_message(
+                f'The load target {target} is invalid or unsupported.',
+                target=target,
+            ))
 
         self._cache[target] = contents
 
@@ -74,7 +78,10 @@ class IOManager:
         elif target is enums.Data.transactions:
             path = self._save_table(target.value, to_save, **options)
         else:
-            raise ValueError()  # TODO
+            raise ValueError(utils.error_message(
+                f'The save target {target} is invalid or unsupported.',
+                target=target,
+            ))
 
         return path
 

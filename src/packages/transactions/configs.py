@@ -3,6 +3,7 @@
 from typing import *
 
 from . import constants
+from . import utils
 
 
 class Configs:
@@ -23,6 +24,10 @@ class Configs:
         '''Gets the requested config.'''
 
         if key not in self._configs:
-            raise KeyError()  # TODO: Write a helpful user-friendly message here (missing config). Print the absolute path to the config file too.
+            raise KeyError(utils.error_message(
+                'The config {key} is undefined.',
+                'Please define it in your configuration file.',
+                key=key,
+            ))
 
         return self._configs[key]

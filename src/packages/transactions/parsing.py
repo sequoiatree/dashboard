@@ -7,6 +7,7 @@ import pandas as pd
 
 from . import constants
 from . import enums
+from . import utils
 
 
 class Parser:
@@ -47,16 +48,24 @@ class Parser:
         try:
             transactions = pd.read_csv(self._path(file), dtype='string')
         except Exception as exception:
-            raise ValueError() from exception  # TODO - include a helpful error message
+            raise ValueError(utils.error_message(
+                'Could not parse transactions file {path}.',
+                path=self._path(file),
+            )) from exception
 
         account = identify_account(file, transactions)
 
         if account is enums.Account.ally:
-            transactions = parse_transactions_from_ally(transactions)
+            transactions = standardize_transactions_from_ally(transactions)
         # elif account is enums.Account.____:
-        #     transactions = parse_transactions_from_____(transactions)
+        #     transactions = standardize_transactions_from_____(transactions)
         else:
-            raise ValueError(...)  # TODO
+            raise ValueError(utils.error_message(
+                'Could not standardize transaction data from {account}.',
+                'You can implement the standardization logic in {code}.',
+                account=account,
+                code=__file__,
+            ))
 
         transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
 
@@ -90,15 +99,20 @@ def identify_account(
         ...
     '''
 
-    if file == 'transactions.csv':
+    if file == 'transactions.csv':  # TODO: Make this more robust against non-Ally files, e.g. check original column names too. Write an is_ally() function, possibly abstract into id.py.
         return enums.Account.ally
     # elif ____:
     #     return enums.Account.____
     else:
-        raise ValueError(...)  # TODO
+        raise ValueError(utils.error_message(
+            'Could not identify the account corresponding to {file}.',
+            'You can implement the identification logic in {code}.',
+            file=file,
+            code=__file__,
+        ))
 
 
-def parse_transactions_from_ally(
+def standardize_transactions_from_ally(
     transactions: pd.DataFrame,
 ) -> pd.DataFrame:
     '''...'''

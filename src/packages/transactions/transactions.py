@@ -54,7 +54,10 @@ class Transactions:
                 columns=constants.TRANSACTIONS_COLUMNS,
             )
         else:
-            raise ValueError()  # TODO
+            raise ValueError(utils.error_message(
+                'The load target {target} is invalid or unsupported.',
+                target=target,
+            ))
 
     def add_transactions(
         self,
@@ -68,9 +71,6 @@ class Transactions:
 
         Returns:
             None.
-
-        Raises:
-            ...
         '''
 
         new_transactions = (
@@ -210,7 +210,7 @@ class Transactions:
     ) -> str:
         '''...'''
 
-        def serialize(
+        def serialize(  # TODO: Replace this with a simple custom encoder. Search for "Extending JSONEncoder" on https://docs.python.org/3/library/json.html.
             object: Any,
         ) -> Any:
             '''...
@@ -241,7 +241,7 @@ class Transactions:
             elif isinstance(object, str):
                 return object
             else:
-                raise TypeError(...)  # TODO
+                raise TypeError(...)
 
         return {
             'transactions': serialize(

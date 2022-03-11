@@ -22,6 +22,22 @@ def budget_status(
     return buffer, status
 
 
+def error_message(
+    *message: str,
+    **macros: Any,
+) -> str:
+    '''...'''
+
+    return (
+        ' '
+        .join(message)
+        .format(**{
+            keyword: f'`{replacement}`'
+            for keyword, replacement in macros.items()
+        })
+    )
+
+
 def formate_date(
     date: pd.Timestamp,
 ) -> str:
@@ -190,6 +206,10 @@ def stringify_columns(
         elif pd.api.types.is_string_dtype(column):
             return column
         else:
-            raise TypeError(...)  # TODO
+            raise TypeError(error_message(
+                'Could not stringify column {name} with dtype {dtype}.',
+                name=column.name,
+                dtype=column.dtype,
+            ))
 
     return df.apply(stringify_column)
