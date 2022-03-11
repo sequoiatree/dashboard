@@ -30,18 +30,31 @@ class Transactions:
         '''
 
         self._io_manager = io_manager
-        self._aliases = self._io_manager.load(enums.Data.aliases)  # TODO: Load lazily instead of loading all at the beginning. Maybe make a convenience _get function that calls io_manager.load()?
-        self._configs = self._io_manager.load(enums.Data.configs)
-        self._transactions = self._io_manager.load(
-            enums.Data.transactions,
-            columns=constants.TRANSACTIONS_COLUMNS,
-        )
-        self._saved_tags = self._io_manager.load(
-            enums.Data.saved_tags,
-            columns=constants.SAVED_TAGS_COLUMNS,
-        )
-
+        self._transactions = self._get(enums.Data.transactions)
         self._postprocessed_transactions = None
+
+    def _get(
+        self,
+        target: enums.Data,
+    ) -> Any:
+        '''...'''
+
+        if target is enums.Data.aliases:
+            return self._io_manager.load(enums.Data.aliases)
+        elif target is enums.Data.configs:
+            return self._io_manager.load(enums.Data.configs)
+        elif target is enums.Data.saved_tags:
+            return self._io_manager.load(
+                enums.Data.saved_tags,
+                columns=constants.SAVED_TAGS_COLUMNS,
+            )
+        elif target is enums.Data.transactions:
+            return self._io_manager.load(
+                enums.Data.transactions,
+                columns=constants.TRANSACTIONS_COLUMNS,
+            )
+        else:
+            raise ValueError()  # TODO
 
     def add_transactions(
         self,
@@ -90,8 +103,8 @@ class Transactions:
         if self._postprocessed_transactions is None:
             self._postprocessed_transactions = (
                 self._transactions
-                .pipe(with_clean_descriptions, aliases=self._aliases)
-                .pipe(with_tags, saved_tags=self._saved_tags)
+                .pipe(with_clean_descriptions, aliases=self._get(enums.Data.aliases))
+                .pipe(with_tags, saved_tags=self._get(enums.Data.saved_tags))
                 .sort_values('date', ascending=False)
             )
 
@@ -104,7 +117,7 @@ class Transactions:
 
         transactions = self.transactions().pipe(select_recent, since=1)
 
-        monthly_budget = self._configs['budget']
+        monthly_budget = self._get(enums.Data.configs)['budget']
         current_month = utils.months_ago(0)
 
         total = lambda transactions: transactions['amount'].sum()
@@ -198,7 +211,6 @@ class Transactions:
     ) -> None:
         '''...'''
 
-        self._io_manager.save(enums.Data.saved_tags, self._saved_tags)
         self._io_manager.save(enums.Data.transactions, self._transactions)
 
     def to_dict(
