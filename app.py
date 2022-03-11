@@ -59,7 +59,7 @@ def register_transactions(app):
     @app.route('/transactions', methods=['POST'])
     def transactions():
 
-        transactions = budgeting.parse_transactions(
+        transactions = budgeting.request_transactions(
             DATA_DIR,
             UPLOAD_DIR,
             **flask.request.get_json(),

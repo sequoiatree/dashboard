@@ -1,3 +1,3 @@
 '''...'''
 
-from .budgeting import parse_transactions
+from .budgeting import request_transactions

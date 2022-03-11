@@ -8,7 +8,7 @@ from . import transactions
 from . import utils
 
 
-def parse_transactions(  # TODO: Rename!
+def request_transactions(
     data_dir: str,
     upload_dir: str,
     *,
