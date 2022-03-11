@@ -15,7 +15,7 @@ def parse_transactions(
     upload_dir: str,
     *,
     regex: Optional[Dict[str, str]],
-    tag_update: Optional[List[Union[Dict[str, str], str]]],  # TODO: JS file should pass this as a dict, not a list!
+    tag_update: Optional[Dict[str, Union[Dict[str, str], str]]],
 ) -> str:
     '''...
 
@@ -34,7 +34,7 @@ def parse_transactions(
     if regex is not None:
         utils.register_regex(transactions_io_manager, **regex)
     if tag_update is not None:
-        utils.register_tag_update(transactions_io_manager, *tag_update)
+        utils.register_tag_update(transactions_io_manager, **tag_update)
 
     all_transactions = transactions.Transactions(transactions_io_manager)
     for file in os.listdir(upload_dir):

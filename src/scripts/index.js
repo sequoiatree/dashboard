@@ -54,10 +54,10 @@ function initViewTransactionsButton() {
 
                         viewTransactions(
                             readRegEx=false,
-                            tagUpdate=[
-                                transactions.transactions[i],
-                                nextTag,
-                            ],
+                            tagUpdate={
+                                'datum': transactions.transactions[i],
+                                'new_tag': nextTag,
+                            },
                         );
                         event.stopPropagation();
 
