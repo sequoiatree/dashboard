@@ -27,35 +27,47 @@ class IOManager:
             None.
         '''
 
+        self._cache = {}
         self._data_dir = data_dir
         self._use_temp = False
 
     def load(
         self,
         target: enums.Data,
+        cached: bool=True,
+        /,
         **options: Any,
     ) -> Any:
         '''...'''
 
+        if cached and target in self._cache:
+            return self._cache[target]
+
         if target is enums.Data.aliases:
-            return self._load_json(target.value)
-        if target is enums.Data.configs:
-            return configs.Configs(self._load_json(target.value))
-        if target is enums.Data.saved_tags:
-            return self._load_table(target.value, **options)
-        if target is enums.Data.transactions:
-            return self._load_table(target.value, **options)
-        raise ValueError()  # TODO
+            contents = self._load_json(target.value)
+        elif target is enums.Data.configs:
+            contents = configs.Configs(self._load_json(target.value))
+        elif target is enums.Data.saved_tags:
+            contents = self._load_table(target.value, **options)
+        elif target is enums.Data.transactions:
+            contents = self._load_table(target.value, **options)
+        else:
+            raise ValueError()  # TODO
+
+        self._cache[target] = contents
+
+        return contents
 
     def save(
         self,
         target: enums.Data,
         to_save: Any,
+        /,
         **options: Any,
     ) -> str:
         '''...'''
 
-        if target is enums.Data.aliases:
+        if target is enums.Data.aliases:  # TODO: Convert all if/if/if chains into if/elif/else chains.
             return self._save_json(target.value, to_save, **options)
         if target is enums.Data.saved_tags:
             return self._save_table(target.value, to_save, **options)
