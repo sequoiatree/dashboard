@@ -108,6 +108,9 @@ class IOManager:
 
         os.rename(temp_path, path)
 
+        if target in self._cache:
+            del self._cache[target]
+
         return path
 
     def _path(
