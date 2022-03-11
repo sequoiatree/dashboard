@@ -1,4 +1,4 @@
-'''Da$hboard: A personal finance dashboard for budgeting and investing.'''
+'''Launches the app on http://127.0.0.1:5000.'''
 
 import os
 from typing import *
