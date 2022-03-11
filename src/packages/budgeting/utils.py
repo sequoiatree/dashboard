@@ -140,13 +140,13 @@ def register_regex(
 
 def register_tag_update(
     io_manager: io_manager.IOManager,
-    datum: Dict[str, str],
+    serialized_datum: Dict[str, str],
     new_tag: str,
 ) -> None:
     '''...
 
     Args:
-        datum:
+        serialized_datum:
         new_tag:
 
     Returns:
@@ -159,13 +159,13 @@ def register_tag_update(
         '''...'''
 
         year = datetime.date.today().year
-        date = datetime.datetime.strptime(datum['date'], '%a, %b. %d')
+        date = datetime.datetime.strptime(serialized_datum['date'], '%a, %b. %d')
         datum = pd.DataFrame(
             {
-                'account': datum['account'],
+                'account': serialized_datum['account'],
                 'date': pd.Timestamp(datetime.date(year, date.month, date.day)),
-                'amount': float(datum['amount']),
-                'description': datum['description'],
+                'amount': float(serialized_datum['amount']),
+                'description': serialized_datum['description'],
                 'tag': new_tag,
             },
             index=[0],

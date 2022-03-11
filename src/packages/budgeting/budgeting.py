@@ -15,7 +15,7 @@ def parse_transactions(
     upload_dir: str,
     *,
     regex: Optional[Dict[str, str]],
-    tag_update: Optional[Dict[str, Union[Dict[str, str], str]]],
+    tag_update: Optional[Dict[str, Union[Dict[str, str], str]]],  # TODO: tag_update functionality is broken.
 ) -> str:
     '''...
 

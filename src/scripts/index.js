@@ -36,7 +36,7 @@ function initViewTransactionsButton() {
 
                 $('#transactions .copy-button').each(function(i, button) {
                     $(button).click(function(event) {
-                        i = button.id.replace(/^copy-button/, '');
+                        i = button.id.replace(/^copy-button-/, '');
                         navigator.clipboard.writeText(
                             transactions.transactions[i].clean_description
                         );
@@ -55,7 +55,7 @@ function initViewTransactionsButton() {
                         viewTransactions(
                             readRegEx=false,
                             tagUpdate={
-                                'datum': transactions.transactions[i],
+                                'serialized_datum': transactions.transactions[i],
                                 'new_tag': nextTag,
                             },
                         );
