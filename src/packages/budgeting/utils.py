@@ -1,14 +1,14 @@
 '''...'''
 
 import datetime
-import json
-import os
 import regex as re
 from typing import *
 
+import numpy as np
 import pandas as pd
 
 from . import enums
+from . import io_manager
 
 
 def budget_status(
@@ -88,17 +88,6 @@ def is_valid_regex(
         return False
 
 
-def path(
-    file: str,
-) -> str:
-    '''...'''
-
-    return os.path.join(
-        os.path.dirname(__file__),
-        file,
-    )
-
-
 def months_ago(
     months_ago: int,
 ) -> int:
@@ -117,14 +106,16 @@ def months_ago(
     return prev_month
 
 
-def register_regex(  # TODO: Move to io_manager.py (and refactor to use its `path` function!)
+def register_regex(
+    io_manager: io_manager.IOManager,
     pattern: str,
     alias: Optional[str],
 ) -> None:
     '''...
 
     Args:
-        regex:
+        pattern:
+        alias:
 
     Returns:
         None.
@@ -134,20 +125,19 @@ def register_regex(  # TODO: Move to io_manager.py (and refactor to use its `pat
     if not is_valid_regex(pattern):
         return
 
-    permanent_file = path('aliases.json')  # TODO: Abstract safe file writing (write to temp then rename) into a function. Useful for register_tag_update too.
-    temporary_file = path('aliases.json') + '.tmp'
+    def update_aliases(
+        aliases: Dict[str, str],
+    ) -> Dict[str, str]:
+        '''...'''
 
-    with open(permanent_file) as f:  # TODO: Refactor: replace with aliases().
-        aliases = json.load(f)
+        aliases.update({pattern: alias and alias.upper()})
+        return aliases
 
-    aliases.update({pattern: alias and alias.upper()})
-
-    with open(temporary_file, 'w') as f:
-        json.dump(aliases, f, indent=4)
-    os.rename(temporary_file, permanent_file)
+    io_manager.update(enums.Data.aliases, update_aliases)
 
 
-def register_tag_update(  # TODO: Move to io_manager.py (and refactor to use its `path` function!)
+def register_tag_update(
+    io_manager: io_manager.IOManager,
     datum: Dict[str, str],
     new_tag: str,
 ) -> None:
@@ -161,40 +151,51 @@ def register_tag_update(  # TODO: Move to io_manager.py (and refactor to use its
         None.
     '''
 
-    permanent_file = path('saved_tags.pickle')
-    temporary_file = path('saved_tags.pickle') + '.tmp'
+    def update_saved_tags(
+        saved_tags: pd.DataFrame,
+    ) -> pd.DataFrame:
+        '''...'''
 
-    saved_tags = pd.read_pickle(permanent_file)  # TODO: Refactor: replace with load_table().
+        year = datetime.date.today().year
+        date = datetime.datetime.strptime(datum['date'], '%a, %b. %d')
+        datum = pd.DataFrame(
+            {
+                'account': datum['account'],
+                'date': pd.Timestamp(datetime.date(year, date.month, date.day)),
+                'amount': float(datum['amount']),
+                'description': datum['description'],
+                'tag': new_tag,
+            },
+            index=[0],
+        )
 
-    year = datetime.date.today().year
-    date = datetime.datetime.strptime(datum['date'], '%a, %b. %d')
-    datum = pd.DataFrame(
-        {
-            'account': datum['account'],
-            'date': pd.Timestamp(datetime.date(year, date.month, date.day)),
-            'amount': float(datum['amount']),
-            'description': datum['description'],
-            'tag': new_tag,
-        },
-        index=[0],
+        saved_tags_to_keep = (
+            saved_tags
+            .merge(datum.drop('tag', axis=1), how='outer', indicator=True)
+            .where(lambda union: union['_merge'] == 'left_only')
+            .dropna()
+            .drop('_merge', axis=1)
+        )
+
+        return (
+            saved_tags_to_keep
+            .append(datum)
+            .reset_index(drop=True)
+        )
+
+    io_manager.update(
+        enums.Data.saved_tags,
+        update_saved_tags,
+        load_options=dict(
+            columns={  # TODO: Copied from transactions.py. Define as a constant instead.
+                'account': pd.Series(dtype=np.dtype('str')),
+                'date': pd.Series(dtype=np.dtype('datetime64[ns]')),
+                'amount': pd.Series(dtype=np.dtype('float64')),
+                'description': pd.Series(dtype=np.dtype('str')),
+                'tag': pd.Series(dtype=np.dtype('str')),
+            },
+        ),
     )
-
-    saved_tags_to_keep = (
-        saved_tags
-        .merge(datum.drop('tag', axis=1), how='outer', indicator=True)
-        .where(lambda union: union['_merge'] == 'left_only')
-        .dropna()
-        .drop('_merge', axis=1)
-    )
-
-    saved_tags = (
-        saved_tags_to_keep
-        .append(datum)
-        .reset_index(drop=True)
-    )
-
-    saved_tags.to_pickle(temporary_file)  # TODO: Save as CSV instead of .pickle so you can read them. Just make sure column dtypes are preserved (or set when loaded from file).
-    os.rename(temporary_file, permanent_file)
 
 
 def stringify_columns(

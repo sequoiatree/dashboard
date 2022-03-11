@@ -17,13 +17,12 @@ class Transactions:
 
     def __init__(
         self,
-        *,
-        data_dir: str,
+        io_manager: io_manager.IOManager,
     ) -> None:
         '''...
 
         Args:
-            data_dir:
+            io_manager:
 
         Returns:
             None.
@@ -40,7 +39,7 @@ class Transactions:
             'tag': pd.Series(dtype=np.dtype('str')),
         }
 
-        self._io_manager = io_manager.IOManager(data_dir)
+        self._io_manager = io_manager
         self._aliases = self._io_manager.load(enums.Data.aliases)
         self._configs = self._io_manager.load(enums.Data.configs)
         self._transactions = self._io_manager.load(
@@ -210,8 +209,8 @@ class Transactions:
     ) -> None:
         '''...'''
 
-        self._io_manager.save(enums.Data.saved_tags, table=self._saved_tags)
-        self._io_manager.save(enums.Data.transactions, table=self._transactions)
+        self._io_manager.save(enums.Data.saved_tags, self._saved_tags)
+        self._io_manager.save(enums.Data.transactions, self._transactions)
 
     def to_dict(
         self,
