@@ -7,11 +7,8 @@ from typing import *
 import pandas as pd
 
 from . import configs
+from . import constants
 from . import enums
-
-
-JSON = Dict[str, Optional[Union[int, float, str, bool, List['JSON'], 'JSON']]]
-TEMP_EXTENSION = '.tmp'
 
 
 class IOManager:
@@ -91,7 +88,7 @@ class IOManager:
 
         self._use_temp, use_temp = True, self._use_temp
         temp_path = self.save(target, new_contents, **save_options)
-        path = temp_path[:-len(TEMP_EXTENSION)]
+        path = temp_path[:-len(constants.TEMP_EXTENSION)]
         self._use_temp = use_temp
 
         os.rename(temp_path, path)
@@ -107,14 +104,14 @@ class IOManager:
         path = os.path.join(self._data_dir, file)
 
         if self._use_temp:
-            path = f'{path}{TEMP_EXTENSION}'
+            path = f'{path}{constants.TEMP_EXTENSION}'
 
         return path
 
     def _load_json(
         self,
         file: str,
-    ) -> JSON:
+    ) -> constants.JSON:
         '''...'''
 
         try:
@@ -138,7 +135,7 @@ class IOManager:
     def _save_json(
         self,
         file: str,
-        data: JSON,
+        data: constants.JSON,
     ) -> str:
         '''...'''
 

@@ -7,6 +7,7 @@ from typing import *
 import numpy as np
 import pandas as pd
 
+from . import constants
 from . import enums
 from . import io_manager
 from . import utils
@@ -28,27 +29,16 @@ class Transactions:
             None.
         '''
 
-        transactions_columns = {
-            'account': pd.Series(dtype=np.dtype('str')),
-            'date': pd.Series(dtype=np.dtype('datetime64[ns]')),
-            'amount': pd.Series(dtype=np.dtype('float64')),
-            'description': pd.Series(dtype=np.dtype('str')),
-        }
-        saved_tags_columns = {
-            **transactions_columns,
-            'tag': pd.Series(dtype=np.dtype('str')),
-        }
-
         self._io_manager = io_manager
         self._aliases = self._io_manager.load(enums.Data.aliases)
         self._configs = self._io_manager.load(enums.Data.configs)
         self._transactions = self._io_manager.load(
             enums.Data.transactions,
-            columns=transactions_columns,
+            columns=constants.TRANSACTIONS_COLUMNS,
         )
         self._saved_tags = self._io_manager.load(
             enums.Data.saved_tags,
-            columns=saved_tags_columns,
+            columns=constants.SAVED_TAGS_COLUMNS,
         )
 
         self._postprocessed_transactions = None

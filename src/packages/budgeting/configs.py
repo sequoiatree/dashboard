@@ -2,10 +2,7 @@
 
 from typing import *
 
-from . import enums
-
-
-JSON = Dict[str, Optional[Union[int, float, str, bool, List['JSON'], 'JSON']]]  # TODO: Move to a constants.py so you don't have to define this here AND in io_manager.py.
+from . import constants
 
 
 class Configs:
@@ -13,7 +10,7 @@ class Configs:
 
     def __init__(
         self,
-        configs: JSON,
+        configs: constants.JSON,
     ) -> None:
         '''...
 
@@ -29,7 +26,7 @@ class Configs:
     def __getitem__(
         self,
         key: str,
-    ) -> JSON:
+    ) -> constants.JSON:
         '''...'''
 
         if key not in self._configs:

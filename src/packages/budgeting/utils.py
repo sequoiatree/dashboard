@@ -7,6 +7,7 @@ from typing import *
 import numpy as np
 import pandas as pd
 
+from . import constants
 from . import enums
 from . import io_manager
 
@@ -187,13 +188,7 @@ def register_tag_update(
         enums.Data.saved_tags,
         update_saved_tags,
         load_options=dict(
-            columns={  # TODO: Copied from transactions.py. Define as a constant instead.
-                'account': pd.Series(dtype=np.dtype('str')),
-                'date': pd.Series(dtype=np.dtype('datetime64[ns]')),
-                'amount': pd.Series(dtype=np.dtype('float64')),
-                'description': pd.Series(dtype=np.dtype('str')),
-                'tag': pd.Series(dtype=np.dtype('str')),
-            },
+            columns=constants.SAVED_TAGS_COLUMNS,
         ),
     )
 
