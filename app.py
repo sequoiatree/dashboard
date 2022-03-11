@@ -6,7 +6,7 @@ from typing import *
 import flask
 import werkzeug.utils
 
-from src.packages import budgeting
+from src.packages import transactions as transactions_lib
 
 
 ROOT_DIR = os.path.dirname(__file__)
@@ -73,7 +73,7 @@ def register_transactions(
     def transactions() -> Any:
         '''Handle a request for transaction data.'''
 
-        transactions = budgeting.request_transactions(
+        transactions = transactions_lib.request_transactions(
             DATA_DIR,
             UPLOAD_DIR,
             **flask.request.get_json(),
