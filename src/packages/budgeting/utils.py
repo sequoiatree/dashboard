@@ -4,7 +4,6 @@ import datetime
 import regex as re
 from typing import *
 
-import numpy as np
 import pandas as pd
 
 from . import constants
@@ -62,6 +61,7 @@ def identify_account(
     # TODO: app.py should take a flag that tells you whether or not to throw error here or pass silently.
     # TODO: It could also take data_dir and upload_dir flags so you could easily specify ~/Downloads as the upload_dir, and anything it doesn't recognize it could silently ignore.
     # TODO: In which case, don't empty the uploads folder on app init. Instead just delete files that are successfully loaded into the Transactions object (but only delete after saving).
+    # TODO: You'll also have to put the read+identify_account logic in a try / except block.
 
     if file == 'transactions.csv':
         return enums.Account.ally

@@ -10,7 +10,7 @@ from . import transactions
 from . import utils
 
 
-def parse_transactions(
+def parse_transactions(  # TODO: Shouldn't need to upload a file to view transactions.
     data_dir: str,
     upload_dir: str,
     *,

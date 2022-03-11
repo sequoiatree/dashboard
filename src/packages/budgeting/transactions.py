@@ -4,7 +4,6 @@ import calendar
 import datetime
 from typing import *
 
-import numpy as np
 import pandas as pd
 
 from . import constants

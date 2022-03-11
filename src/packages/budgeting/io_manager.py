@@ -128,9 +128,16 @@ class IOManager:
         '''...'''
 
         try:
-            return pd.read_pickle(self._path(f'{file}.pickle'))  # TODO: Save as CSV instead of .pickle so you can read them. Just make sure column dtypes are preserved (or set when loaded from file).
+            table = pd.read_csv(self._path(f'{file}.csv'), dtype='string')
+            return table.assign(**{
+                column_name: table[column_name].astype(columns[column_name])
+                for column_name in table.columns
+            })
         except FileNotFoundError:
-            return pd.DataFrame(columns)
+            return pd.DataFrame({
+                column_name: pd.Series(dtype=column_type)
+                for column_name, column_type in columns.items()
+            })
 
     def _save_json(
         self,
@@ -152,7 +159,7 @@ class IOManager:
     ) -> str:
         '''...'''
 
-        path = self._path(f'{file}.pickle')
-        table.to_pickle(path)
+        path = self._path(f'{file}.csv')
+        table.to_csv(path, index=False)
 
         return path
