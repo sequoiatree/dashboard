@@ -71,8 +71,7 @@ class Transactions:
         new_transactions = (
             self._transactions
             .merge(transactions, how='outer', indicator=True)
-            .where(lambda union: union['_merge'] == 'right_only')  # TODO: Get rid of all .where(), .mask(), and .dropna() as they often behave unexpectedly. Use indexing instead.
-            .dropna()
+            .loc[lambda union: union['_merge'] == 'right_only']
             .drop('_merge', axis=1)
         )
 
@@ -91,7 +90,7 @@ class Transactions:
         if self._postprocessed_transactions is None:
             self._postprocessed_transactions = (
                 self._transactions
-                .pipe(with_clean_descriptions, aliases=self._aliases)  # TODO: Move with_clean_descriptions and with_saved_tags into this class so they can access self?
+                .pipe(with_clean_descriptions, aliases=self._aliases)
                 .pipe(with_tags, saved_tags=self._saved_tags)
                 .sort_values('date', ascending=False)
             )

@@ -173,8 +173,7 @@ def register_tag_update(
         saved_tags_to_keep = (
             saved_tags
             .merge(datum.drop('tag', axis=1), how='outer', indicator=True)
-            .where(lambda union: union['_merge'] == 'left_only')
-            .dropna()
+            .loc[lambda union: union['_merge'] == 'left_only']
             .drop('_merge', axis=1)
         )
 
