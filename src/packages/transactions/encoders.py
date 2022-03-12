@@ -27,7 +27,7 @@ class DataFrameJSONEncoder(json.JSONEncoder):
         return super().default(object)
 
 
-def formate_date(
+def format_date(
     date: pd.Timestamp,
 ) -> str:
     '''...
@@ -67,7 +67,7 @@ def stringify_columns(
         '''...'''
 
         if pd.api.types.is_datetime64_dtype(column):
-            return column.apply(formate_date)
+            return column.apply(format_date)
         elif pd.api.types.is_float_dtype(column):
             return column.apply('{:.2f}'.format)
         elif pd.api.types.is_string_dtype(column):
