@@ -95,7 +95,7 @@ class Transactions:
 
         transactions = self.transactions().pipe(select_recent, since=1)
 
-        monthly_budget = self._get(enums.Data.configs)['budget']
+        monthly_budget = self._get(enums.Data.configs)['monthly_spending_budget']
         current_month = utils.months_ago(0)
 
         total = lambda transactions: transactions['amount'].sum()
