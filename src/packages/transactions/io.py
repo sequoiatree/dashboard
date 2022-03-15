@@ -116,19 +116,6 @@ class IOManager:
 
         return path
 
-    def _path(
-        self,
-        file: str,
-    ) -> str:
-        '''Gets the path to the requested file in the data directory.'''
-
-        path = os.path.join(self._data_dir, file)
-
-        if self._use_temp:
-            path = f'{path}{TEMP_EXTENSION}'
-
-        return path
-
     def _load_json(
         self,
         file: str,
@@ -193,6 +180,19 @@ class IOManager:
 
         path = self._path(f'{file}.csv')
         table.to_csv(path, index=False)
+
+        return path
+
+    def _path(
+        self,
+        file: str,
+    ) -> str:
+        '''Gets the path to the requested file in the data directory.'''
+
+        path = os.path.join(self._data_dir, file)
+
+        if self._use_temp:
+            path = f'{path}{TEMP_EXTENSION}'
 
         return path
 
