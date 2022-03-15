@@ -1,4 +1,4 @@
-'''...'''
+'''Parsing.'''
 
 import os
 from typing import *
@@ -11,13 +11,13 @@ from . import utils
 
 
 class Parser:
-    '''...'''
+    '''Parses new transaction data, e.g. downloaded from bank accounts.'''
 
     def __init__(
         self,
         upload_dir: str,
     ) -> None:
-        '''...'''
+        '''Initializes the Parser.'''
 
         self._parsed_files = set()
         self._upload_dir = upload_dir
@@ -25,14 +25,14 @@ class Parser:
     def __iter__(
         self,
     ) -> Iterator[str]:
-        '''...'''
+        '''Returns an iterator over the files in the upload directory.'''
 
         return iter(os.listdir(self._upload_dir))
 
     def clear(
         self,
     ) -> None:
-        '''...'''
+        '''Empties the upload directory of files that have been parsed.'''
 
         for file in self._parsed_files:
             os.remove(self._path(file))
@@ -43,7 +43,7 @@ class Parser:
         self,
         file: str,
     ) -> pd.DataFrame:
-        '''...'''
+        '''Parses new transaction data into a standard format.'''
 
         try:
             transactions = pd.read_csv(self._path(file), dtype='string')
@@ -77,7 +77,7 @@ class Parser:
         self,
         file: str,
     ) -> str:
-        '''...'''
+        '''Gets the path to the requested file in the upload directory.'''
 
         return os.path.join(self._upload_dir, file)
 
@@ -86,18 +86,7 @@ def identify_account(
     file: str,
     transactions: pd.DataFrame,
 ) -> enums.Account:
-    '''...
-
-    Args:
-        file:
-        transactions:
-
-    Returns:
-        ...
-
-    Raises:
-        ...
-    '''
+    '''Identifies the bank account associated with the given transaction data.'''
 
     if file == 'transactions.csv':  # TODO: Make this more robust against non-Ally files, e.g. check original column names too. Write an matches_ally() function, possibly abstract into id.py.
         return enums.Account.ally
@@ -115,16 +104,11 @@ def identify_account(
 def standardize_transactions_from_ally(
     transactions: pd.DataFrame,
 ) -> pd.DataFrame:
-    '''...'''
+    '''Standardizes transaction data downloaded from Ally.'''
 
     transactions.columns = transactions.columns.str.strip()
     transactions.columns = transactions.columns.str.lower()
 
     transactions['account'] = 'ally'
 
-    return transactions[[
-        'account',
-        'date',
-        'amount',
-        'description',
-    ]]
+    return transactions[list(constants.TRANSACTIONS_COLUMNS)]
