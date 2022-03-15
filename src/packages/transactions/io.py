@@ -157,7 +157,13 @@ class IOManager:
         except FileNotFoundError:
             table = pd.DataFrame(columns=list(columns))
 
-        # TODO: Check columns match set(columns).
+        if set(table.columns) != set(columns):
+            raise ValueError(utils.error_message(
+                'Loaded columns {loaded_columns} do not match expected columns',
+                '{expected_columns}.',
+                loaded_columns=set(table.columns),
+                expected_columns=set(columns),
+            ))
 
         return table.astype(columns)
 
