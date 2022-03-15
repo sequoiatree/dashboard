@@ -7,6 +7,7 @@ import pandas as pd
 
 from . import constants
 from . import enums
+from . import id
 from . import utils
 
 
@@ -53,7 +54,7 @@ class Parser:
                 path=self._path(file),
             )) from exception
 
-        account = identify_account(file, transactions)
+        account = id.identify_account(file, transactions)
 
         if account is enums.Account.ally:
             transactions = standardize_transactions_from_ally(transactions)
@@ -80,25 +81,6 @@ class Parser:
         '''Gets the path to the requested file in the upload directory.'''
 
         return os.path.join(self._upload_dir, file)
-
-
-def identify_account(
-    file: str,
-    transactions: pd.DataFrame,
-) -> enums.Account:
-    '''Identifies the bank account associated with the given transaction data.'''
-
-    if file == 'transactions.csv':  # TODO: Make this more robust against non-Ally files, e.g. check original column names too. Write an matches_ally() function, possibly abstract into id.py.
-        return enums.Account.ally
-    # elif ____:
-    #     return enums.Account.____
-    else:
-        raise ValueError(utils.error_message(
-            'Could not identify the account corresponding to {file}.',
-            'You can implement the identification logic in {code}.',
-            file=file,
-            code=__file__,
-        ))
 
 
 def standardize_transactions_from_ally(
