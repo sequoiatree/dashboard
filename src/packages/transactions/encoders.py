@@ -1,4 +1,4 @@
-'''...'''
+'''Encoders.'''
 
 import json
 from typing import *
@@ -9,13 +9,13 @@ from . import utils
 
 
 class DataFrameJSONEncoder(json.JSONEncoder):
-    '''...'''
+    '''Encodes JSON-like Python objects that may contain Pandas DataFrames.'''
 
     def default(
         self,
         object: Any,
     ) -> str:
-        '''...'''
+        '''Encodes the given object as a JSON string.'''
 
         if isinstance(object, pd.DataFrame):
             return (
@@ -30,14 +30,7 @@ class DataFrameJSONEncoder(json.JSONEncoder):
 def format_date(
     date: pd.Timestamp,
 ) -> str:
-    '''...
-
-    Args:
-        date:
-
-    Returns:
-        ...
-    '''
+    '''Converts the given date into a string like 'Thu, Feb. 17'.'''
 
     weekday = date.strftime('%a')
     month = date.strftime('%b')
@@ -49,22 +42,12 @@ def format_date(
 def stringify_columns(
     table: pd.DataFrame,
 ) -> pd.DataFrame:
-    '''...
-
-    Args:
-        table:
-
-    Returns:
-        ...
-
-    Raises:
-        ...
-    '''
+    '''Stringifies and formats all the elements in the given DataFrame.'''
 
     def stringify_column(
         column: pd.Series,
     ) -> pd.Series:
-        '''...'''
+        '''Stringifies and formats all the elements in the given Series.'''
 
         if pd.api.types.is_datetime64_dtype(column):
             return column.apply(format_date)

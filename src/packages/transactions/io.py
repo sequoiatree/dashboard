@@ -1,4 +1,4 @@
-'''...'''
+'''I/O utilities.'''
 
 import datetime
 import json
@@ -14,20 +14,13 @@ from . import utils
 
 
 class IOManager:
-    '''...'''
+    '''Handles I/O operations for a set of pre-defined data files.'''
 
     def __init__(
         self,
         data_dir: str,
     ) -> None:
-        '''...
-
-        Args:
-            data_dir:
-
-        Returns:
-            None.
-        '''
+        '''Initializes the IOManager.'''
 
         self._cache = {}
         self._data_dir = data_dir
@@ -40,7 +33,7 @@ class IOManager:
         /,
         **options: Any,
     ) -> Any:
-        '''...'''
+        '''Loads the requested target.'''
 
         if cached and target in self._cache:
             return self._cache[target]
@@ -70,7 +63,7 @@ class IOManager:
         /,
         **options: Any,
     ) -> str:
-        '''...'''
+        '''Saves the requested target.'''
 
         if target is enums.Data.aliases:
             path = self._save_json(target.value, to_save, **options)
@@ -94,16 +87,12 @@ class IOManager:
         load_options: Dict[str, Any] = {},
         save_options: Dict[str, Any] = {},
     ) -> str:
-        '''...
+        '''Updates the requested target per the given update function.
 
-        Args:
-            target:
-            update_function:    # can be mutative
-            load_options:
-            save_options:
-
-        Returns:
-            None.
+        The update function's singular parameter should be the object received
+        by loading the target with the given load options. The function may or
+        may not be mutative, but either way it should return an updated object
+        to be saved with the given save optioins.
         '''
 
         old_contents = self.load(target, **load_options)
@@ -125,7 +114,7 @@ class IOManager:
         self,
         file: str,
     ) -> str:
-        '''...'''
+        '''Gets the path to the requested file in the data directory.'''
 
         path = os.path.join(self._data_dir, file)
 
@@ -138,7 +127,7 @@ class IOManager:
         self,
         file: str,
     ) -> constants.JSON:
-        '''...'''
+        '''Loads a JSON-like Python object from a JSON file.'''
 
         try:
             with open(self._path(f'{file}.json')) as f:
@@ -151,7 +140,7 @@ class IOManager:
         file: str,
         columns: Dict[str, pd.Series],
     ) -> pd.DataFrame:
-        '''...'''
+        '''Loads a Pandas DataFrame from a CSV file.'''
 
         try:
             table = pd.read_csv(self._path(f'{file}.csv'), dtype='string')
@@ -170,7 +159,7 @@ class IOManager:
         file: str,
         data: constants.JSON,
     ) -> str:
-        '''...'''
+        '''Saves a JSON-like Python object to a JSON file.'''
 
         path = self._path(f'{file}.json')
         with open(path, 'w') as f:
@@ -183,7 +172,7 @@ class IOManager:
         file: str,
         table: pd.DataFrame,
     ) -> str:
-        '''...'''
+        '''Saves a Pandas DataFrame to a CSV file.'''
 
         path = self._path(f'{file}.csv')
         table.to_csv(path, index=False)
@@ -196,11 +185,18 @@ def register_regex(
     pattern: str,
     alias: Optional[str],
 ) -> None:
-    '''...
+    '''Updates the `aliases` target with a new substitution or deletion rule.
+
+    `Transactions` instances use the rules defined by this target to clean up
+    the descriptions associated with financial transactions.
 
     Args:
-        pattern:
-        alias:
+        io_manager: The `IOManager` that should handle the update.
+        pattern: A RegEx pattern matching the descriptions that should be
+            replaced or deleted.
+        alias: The new text that should replace the descriptions matching the
+            given pattern, or `None` to instead delete the transactions
+            associated with those descriptions.
 
     Returns:
         None.
@@ -213,7 +209,6 @@ def register_regex(
     def update_aliases(
         aliases: Dict[str, str],
     ) -> Dict[str, str]:
-        '''...'''
 
         aliases.update({pattern: alias and alias.upper()})
         return aliases
@@ -226,11 +221,15 @@ def register_tag_update(
     serialized_datum: Dict[str, str],
     new_tag: str,
 ) -> None:
-    '''...
+    '''Updates the `saved_tags` target with a new tag for a transaction.
+
+    `Transactions` instances use the tags defined by this target to correct
+    inaccuracies in the tags automatically assigned to financial transactions.
 
     Args:
-        serialized_datum:
-        new_tag:
+        serialized_datum: A JSON-like representation of the transaction whose
+            tag should be changed.
+        new_tag: The new tag that should be associated with the transaction.
 
     Returns:
         None.
@@ -239,7 +238,6 @@ def register_tag_update(
     def update_saved_tags(
         saved_tags: pd.DataFrame,
     ) -> pd.DataFrame:
-        '''...'''
 
         year = datetime.date.today().year
         date = datetime.datetime.strptime(serialized_datum['date'], '%a, %b. %d')
