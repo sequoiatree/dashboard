@@ -1,4 +1,4 @@
-'''...'''
+'''Transactions.'''
 
 import calendar
 import datetime
@@ -15,20 +15,13 @@ from . import utils
 
 
 class Transactions:
-    '''...'''
+    '''Models financial transactions and exposes an API for simple analysis.'''
 
     def __init__(
         self,
         io_manager: io.IOManager,
     ) -> None:
-        '''...
-
-        Args:
-            io_manager:
-
-        Returns:
-            None.
-        '''
+        '''Initializes the `Transactions` instance.'''
 
         self._io_manager = io_manager
         self._transactions = self._get(enums.Data.transactions)
@@ -38,7 +31,7 @@ class Transactions:
         self,
         target: enums.Data,
     ) -> Any:
-        '''...'''
+        '''Loads the requested target.'''
 
         if target is enums.Data.aliases:
             return self._io_manager.load(enums.Data.aliases)
@@ -64,15 +57,7 @@ class Transactions:
         self,
         transactions: pd.DataFrame,
     ) -> None:
-        '''...
-
-        Args:
-            account:
-            transactions:
-
-        Returns:
-            None.
-        '''
+        '''Adds new transactions for the `Transactions` instance to track.'''
 
         new_transactions = (
             self._transactions
@@ -91,7 +76,7 @@ class Transactions:
     def transactions(
         self,
     ) -> pd.DataFrame:
-        '''...'''
+        '''Gets post-processed transactions, with all the desired metadata.'''
 
         if self._postprocessed_transactions is None:
             self._postprocessed_transactions = (
@@ -106,7 +91,7 @@ class Transactions:
     def metrics(
         self,
     ) -> pd.DataFrame:
-        '''...'''
+        '''Gets summarizing metrics per month and for the year-to-date.'''
 
         transactions = self.transactions().pipe(select_recent, since=1)
 
@@ -124,7 +109,6 @@ class Transactions:
             budget: float,
             spending: float,
         ) -> Tuple[float, str]:
-            '''...'''
 
             buffer = budget - abs(spending)
             status = 'OVER BUDGET' if buffer < 0 else 'WITHIN BUDGET'
@@ -133,7 +117,6 @@ class Transactions:
 
         def ytd_metrics(
         ) -> pd.DataFrame:
-            '''...'''
 
             ytd_budget = monthly_budget * current_month
 
@@ -158,7 +141,6 @@ class Transactions:
         def month_metrics(
             month: int,
         ) -> pd.DataFrame:
-            '''...'''
 
             for_month = lambda transactions: transactions.pipe(
                 select_recent,
@@ -202,14 +184,14 @@ class Transactions:
     def save(
         self,
     ) -> None:
-        '''...'''
+        '''Saves all tracked transactions.'''
 
         self._io_manager.save(enums.Data.transactions, self._transactions)
 
     def to_json(
         self,
     ) -> str:
-        '''...'''
+        '''Encodes the `Transactions` instance as a JSON string.'''
 
         return encoders.DataFrameJSONEncoder().encode({
             'transactions': (
@@ -225,14 +207,10 @@ def with_clean_descriptions(
     transactions: pd.DataFrame,
     aliases: Dict[str, Optional[str]],
 ) -> pd.DataFrame:
-    '''...
+    '''Cleans the descriptions of the given transactions.
 
-    Args:
-        transactions:
-        aliases:
-
-    Returns:
-        ...
+    In addition to basic string cleaning, this involves the replacements and
+    deletions specified by `aliases`.
     '''
 
     patterns_to_sub = {}
@@ -284,14 +262,10 @@ def with_tags(
     transactions: pd.DataFrame,
     saved_tags: pd.DataFrame,
 ) -> pd.DataFrame:
-    '''
-        ...
+    '''Tags the given transactions.
 
-    Args:
-        transactions:
-
-    Returns:
-        ...
+    Tags loaded from `saved_tags` take priority over those automatically
+    assigned to transactions, as the latter are only educated guesses.
     '''
 
     tags = pd.Series('', index=transactions.index, dtype='string')
@@ -322,15 +296,21 @@ def select_recent(
     since: int,
     to_present: bool = True,
 ) -> pd.DataFrame:
-    '''...
+    '''Select all transactions since the specified month, or only those in it.
 
     Args:
-        transactions:
-        since:            month identifier, 1-indexed for consistency w datetime
-        to_present:       T = from that month to now, F = just that month
+        transactions: The transactions to select from.
+        since: The month number, 1-indexed for consistency with the `datetime`
+            module. The specified month is the most recent one corresponding to
+            the month number provided. For example `since=5` specifies May 2021
+            if called in January 2022, but it specifies May 2022 if called in
+            June 2022.
+        to_present: Whether to include all transactions since the beginning of
+            the specified month, or only those in it.
 
     Returns:
-        ...
+        All transactions since the specified month, or only those in it,
+        depending on the value of `to_present`.
     '''
 
     current_month = utils.months_ago(0)
