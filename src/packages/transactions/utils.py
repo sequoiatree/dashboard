@@ -1,4 +1,4 @@
-'''...'''
+'''Utilities.'''
 
 import datetime
 import regex as re
@@ -9,7 +9,18 @@ def error_message(
     *message: str,
     **macros: Any,
 ) -> str:
-    '''...'''
+    '''Generate an error message from the given message strings and macros.
+
+    For example:
+    >>> x = 10
+    >>> error_message(
+    ...     'You entered the value {value} of type {type}.',
+    ...     'Please try again.',
+    ...     value=x,
+    ...     type=type(x),
+    ... )
+    "You entered the value `10` of type `<class 'int'>`. Please try again."
+    '''
 
     return (
         ' '
@@ -24,14 +35,7 @@ def error_message(
 def is_valid_regex(
     pattern: str,
 ) -> bool:
-    '''...
-
-    Args:
-        pattern:
-
-    Returns:
-        ...
-    '''
+    '''Determines whether the given string a valid RegEx pattern.'''
 
     try:
         re.compile(pattern)
@@ -43,13 +47,17 @@ def is_valid_regex(
 def months_ago(
     months_ago: int,
 ) -> int:
-    '''... # 1-indexed (ie [1, 12]) to be consistent w datetime module
+    '''Gets the month number corresponding to the requested month.
 
     Args:
-        months_ago:
+        months_ago: The month number, 1-indexed for consistency with the
+            `datetime` module.
 
     Returns:
-        ...
+        The 1-indexed month number corresponding to the month that occurred
+        `months_ago` months ago. For example `months_ago=2` specifies 10
+        (October) if called in December, but it specifies 12 (December) if
+        called in February.
     '''
 
     curr_month = datetime.date.today().month
