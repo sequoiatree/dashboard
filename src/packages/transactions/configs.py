@@ -11,10 +11,12 @@ class Configs:
 
     def __init__(
         self,
+        path: str,
         configs: constants.JSON,
     ) -> None:
         '''Initializes the Configs instance.'''
 
+        self._path = path
         self._configs = configs
 
     def __getitem__(
@@ -26,8 +28,9 @@ class Configs:
         if key not in self._configs:
             raise KeyError(utils.error_message(
                 'The config {key} is undefined.',
-                'Please define it in your configuration file.',
+                'Please define it in {file}.',
                 key=key,
+                file=self._path,
             ))
 
         return self._configs[key]

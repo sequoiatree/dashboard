@@ -5,7 +5,7 @@ from typing import *
 
 JSON = Dict[str, Optional[Union[int, float, str, bool, List['JSON'], 'JSON']]]
 
-TEMP_EXTENSION = '.tmp'
+TEMP_EXTENSION = '.tmp'  # TODO: Move to io since only used there.
 
 TRANSACTIONS_COLUMNS = {
     'account': 'string',

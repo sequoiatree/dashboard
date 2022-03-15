@@ -39,9 +39,12 @@ class IOManager:
             return self._cache[target]
 
         if target is enums.Data.aliases:
-            contents = self._load_json(target.value)
+            contents = self._load_json(target.value, **options)
         elif target is enums.Data.configs:
-            contents = configs.Configs(self._load_json(target.value))
+            contents = configs.Configs(
+                self._path(f'{target.value}.json'),
+                self._load_json(target.value, **options),
+            )
         elif target is enums.Data.saved_tags:
             contents = self._load_table(target.value, **options)
         elif target is enums.Data.transactions:
