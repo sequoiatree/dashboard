@@ -13,6 +13,9 @@ from . import enums
 from . import utils
 
 
+TEMP_EXTENSION = '.tmp'
+
+
 class IOManager:
     '''Handles I/O operations for a set of pre-defined data files.'''
 
@@ -103,7 +106,7 @@ class IOManager:
 
         self._use_temp, use_temp = True, self._use_temp
         temp_path = self.save(target, new_contents, **save_options)
-        path = temp_path[:-len(constants.TEMP_EXTENSION)]
+        path = temp_path[:-len(TEMP_EXTENSION)]
         self._use_temp = use_temp
 
         os.rename(temp_path, path)
@@ -122,7 +125,7 @@ class IOManager:
         path = os.path.join(self._data_dir, file)
 
         if self._use_temp:
-            path = f'{path}{constants.TEMP_EXTENSION}'
+            path = f'{path}{TEMP_EXTENSION}'
 
         return path
 
