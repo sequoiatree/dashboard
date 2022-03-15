@@ -1,4 +1,4 @@
-'''...'''
+'''Requests.'''
 
 from typing import *
 
@@ -14,16 +14,19 @@ def request_transactions(
     regex: Optional[Dict[str, str]],
     tag_update: Optional[Dict[str, Union[Dict[str, str], str]]],
 ) -> str:
-    '''...
+    '''Requests the transactions described by the given files.
 
     Args:
-        data_dir:
-        upload_dir:
-        regex:
-        tag_update:
+        data_dir: The path to a directory of persistent local data (e.g. old
+            transaction data from previous analysis).
+        upload_dir: The path to a directory of new uploads (e.g. new transaction
+            data downloaded from bank accounts).
+        regex: A new RegEx alias for cleaning matching transactions'
+            descriptions.
+        tag_update: A new tag for an inaccurately tagged transaction.
 
     Returns:
-        ...
+        The transactions requested.
     '''
 
     io_manager = io.IOManager(data_dir)
