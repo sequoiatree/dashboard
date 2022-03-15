@@ -119,7 +119,6 @@ class IOManager:
     def _load_json(
         self,
         file: str,
-        /,
     ) -> constants.JSON:
         '''Loads a JSON-like Python object from a JSON file.'''
 
@@ -135,7 +134,6 @@ class IOManager:
     def _load_table(
         self,
         file: str,
-        /,
         columns: Dict[str, pd.Series],
     ) -> pd.DataFrame:
         '''Loads a Pandas DataFrame from a CSV file.'''
@@ -160,7 +158,6 @@ class IOManager:
         self,
         file: str,
         data: constants.JSON,
-        /,
     ) -> str:
         '''Saves a JSON-like Python object to a JSON file.'''
 
@@ -174,7 +171,6 @@ class IOManager:
         self,
         file: str,
         table: pd.DataFrame,
-        /,
     ) -> str:
         '''Saves a Pandas DataFrame to a CSV file.'''
 
