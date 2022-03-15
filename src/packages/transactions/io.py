@@ -135,11 +135,14 @@ class IOManager:
     ) -> constants.JSON:
         '''Loads a JSON-like Python object from a JSON file.'''
 
+        path = self._path(f'{file}.json')
         try:
-            with open(self._path(f'{file}.json')) as f:
-                return json.load(f)
+            with open(path) as f:
+                json_object = json.load(f)
         except FileNotFoundError:
-            return {}
+            json_object = {}
+
+        return json_object
 
     def _load_table(
         self,
@@ -148,17 +151,15 @@ class IOManager:
     ) -> pd.DataFrame:
         '''Loads a Pandas DataFrame from a CSV file.'''
 
+        path = self._path(f'{file}.csv')
         try:
-            table = pd.read_csv(self._path(f'{file}.csv'), dtype='string')
-            return table.assign(**{
-                column_name: table[column_name].astype(columns[column_name])
-                for column_name in table.columns
-            })
+            table = pd.read_csv(path, dtype='string')
         except FileNotFoundError:
-            return pd.DataFrame({
-                column_name: pd.Series(dtype=column_type)
-                for column_name, column_type in columns.items()
-            })
+            table = pd.DataFrame(columns=list(columns))
+
+        # TODO: Check columns match set(columns).
+
+        return table.astype(columns)
 
     def _save_json(
         self,
