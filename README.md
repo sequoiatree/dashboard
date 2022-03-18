@@ -35,15 +35,10 @@ Your Da$hboard is a minimal personal finance tool designed to help you navigate 
 
 1. Download this repository. You can do this by clicking the green "Code" button at the top of the page, clicking "Download ZIP" in the dropdown menu that appears, and finally unzipping the downloaded folder on your computer. Keep it somewhere you won't lose it, like your desktop.
 
-1. `cd` into the `Da$hboard` directory.
-
-   ```bash
-   $ cd Da\$hboard
-   ```
-
 1. Install the necessary requirements.
 
    ```bash
+   $ cd Da\$hboard
    $ pip install -r requirements.txt
    ```
 
@@ -77,6 +72,13 @@ Note that this app presently only knows how to parse data from the banks that I 
 ### Development
 
 1. Install NPM.
+1. Install the necessary requirements.
+
+   ```bash
+   $ cd Da\$hboard
+   $ npm install --no-optional
+   ```
+
 1. Make your desired changes.
    * For changes to Python files, you don't have to do anything special.
    * For changes to JavaScript files, run `npm run watch-js`.
