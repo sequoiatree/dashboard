@@ -47,6 +47,8 @@ Your Da$hboard is a minimal personal finance tool designed to help you navigate 
    $ pip install -r requirements.txt
    ```
 
+1. Customize your configurations in `Da\$hboard/data/configs.json`.
+
 ### Usage
 
 Every month …
