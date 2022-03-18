@@ -1,7 +1,7 @@
 {
   "scripts": {
     "watch-js": "webpack --progress --watch",
-    "watch-css": "sass --watch ./src/styles:./static/styles"
+    "watch-css": "sass --no-source-map --style compressed --watch ./src/styles:./static/styles"
   },
   "devDependencies": {
     "webpack": "4.x",

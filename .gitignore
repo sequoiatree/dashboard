@@ -7,9 +7,5 @@ node_modules/
 data/*
 uploads/*
 
-# Front-end
-static/styles/*
-static/scripts/*
-
 # Back-end
 __pycache__/
