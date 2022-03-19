@@ -38,11 +38,11 @@ Your Da$hboard is a minimal personal finance tool designed to help you navigate 
 1. Install the necessary requirements.
 
    ```bash
-   $ cd Da\$hboard
+   $ cd Dashboard
    $ pip install -r requirements.txt
    ```
 
-1. Customize your configurations in `Da\$hboard/data/configs.json`.
+1. Customize your configurations in `Dashboard/data/configs.json`.
 
 ### Usage
 
@@ -50,17 +50,17 @@ Every month …
 
 1. Log into each of your bank accounts and download a CSV of your recent transactions. This is quick and easy if you keep a list of direct links to each of them.
 
-1. Launch the `Da\$hboard` app.
+1. Launch the app.
 
    ```bash
-   $ cd Da\$hboard
+   $ cd Dashboard
    $ python app.py
    ```
 
    For convenience, you may optionally want to set up an alias in your `~/.bash_aliases` file. Here's mine:
 
    ```
-   alias dashboard="python ~/Desktop/Da\$hboard/app.py"
+   alias dashboard="python ~/Desktop/Dashboard/app.py"
    ```
 
 1. Navigate to http://127.0.0.1:5000.
@@ -75,7 +75,7 @@ Note that this app presently only knows how to parse data from the banks that I 
 1. Install the necessary requirements.
 
    ```bash
-   $ cd Da\$hboard
+   $ cd Dashboard
    $ npm install --no-optional
    ```
 
