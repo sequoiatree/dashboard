@@ -12,7 +12,7 @@ Your Da$hboard is a minimal personal finance tool designed to help you navigate 
 * **Custom Descriptions:** In the screenshot above, all the transactions have simple, easily readable descriptions. That's thanks to the aliasing bar under the transactions table. Want to relabel a certain transaction, and all future transactions like it? Just enter a valid RegEx pattern on the left, and the new description on the right. Or leave the right side blank, if you'd rather just hide those transactions altogether!
 * **Account Breakdown:** To the left of each transaction you'll notice a colorful box indicating which bank account its associated with. This is so you can see if you're using each of your accounts for the right kinds of transactions.
 * **Transaction Tagging:** Some transactions also bare a tag. I tag all my purchases as either "property expenses" or "spending", but it's easy to make your own tags if you like. If you notice a transaction was inaccurately tagged, just click the tag to correct it.
-* **Summary Metrics:** If you scroll to the bottom of the table, you'll see the your per-tag totals (e.g. total property expenses, total spending, etc.) for last month and the this month so far. You'll also see your average for the year-to-date, and how much you're under or over the budget you set for yourself.
+* **Summary Metrics:** If you scroll to the bottom of the table, you'll see the your monthly totals for each tag (e.g. total property expenses, total spending, etc.) for last month and this month. You'll also see your monthly averages for the year-to-date, and how much you're under or over the budget you set for yourself.
 
 ### Investing
 
