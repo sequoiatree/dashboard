@@ -45,7 +45,7 @@ export const TRANSACTIONS_TEMPLATE = compile(`
       <td class="px-2 amount {{sign amount}} text-right border-left border-dark">
         {{amount}}
       </td>
-      <td class="account-{{account}} border-left border-right border-dark">
+      <td class="account account-{{account}} border-left border-right border-dark">
       </td>
     </tr>
   {{/ each}}

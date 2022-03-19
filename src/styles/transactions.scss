@@ -77,9 +77,11 @@
             color: red;
           }
         }
-        &.account-ally {
-          background: purple;
+        &.account {
           width: 1ch;
+          &.account-ally {
+            background: purple;
+          }
         }
         & > .description {
         }
