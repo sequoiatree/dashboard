@@ -2,7 +2,7 @@
 
 Your Da$hboard is a minimal personal finance tool designed to help you navigate month-to-month budgeting and investing. Use it to review your transaction history, calculate your portfolio allocation, and more.
 
-[TODO: screenshot of main page (use example data)]
+![Example](/static/images/example.png)
 
 ## Features
 
