@@ -1,5 +1,6 @@
 '''Parsing.'''
 
+import datetime
 import os
 from typing import *
 
@@ -56,10 +57,13 @@ class Parser:
 
         account = id.identify_account(file, transactions)
 
+        transactions.columns = transactions.columns.str.strip()
+        transactions.columns = transactions.columns.str.lower()
+
         if account is enums.Account.ally:
             transactions = standardize_transactions_from_ally(transactions)
-        # elif account is enums.Account.____:
-        #     transactions = standardize_transactions_from_____(transactions)
+        elif account is enums.Account.chase:
+            transactions = standardize_transactions_from_chase(transactions)
         else:
             raise ValueError(utils.error_message(
                 'Could not standardize transaction data from {account}.',
@@ -67,8 +71,6 @@ class Parser:
                 account=account,
                 code=__file__,
             ))
-
-        transactions = transactions.astype(constants.TRANSACTIONS_COLUMNS)
 
         self._parsed_files.add(file)
 
@@ -88,9 +90,59 @@ def standardize_transactions_from_ally(
 ) -> pd.DataFrame:
     '''Standardizes transaction data downloaded from Ally.'''
 
-    transactions.columns = transactions.columns.str.strip()
-    transactions.columns = transactions.columns.str.lower()
-
     transactions['account'] = 'ally'
 
-    return transactions[list(constants.TRANSACTIONS_COLUMNS)]
+    return (
+        transactions
+        .pipe(standardize_transactions_columns)
+    )
+
+
+def standardize_transactions_from_chase(
+    transactions: pd.DataFrame,
+) -> pd.DataFrame:
+    '''Standardizes transaction data downloaded from Chase.'''
+
+    transactions['account'] = 'chase'
+
+    return (
+        transactions
+        .assign(
+            date=(
+                transactions['transaction date']
+                .map(date_string_standardizer('%m/%d/%Y'))
+            ),
+        )
+        .pipe(standardize_transactions_columns)
+    )
+
+
+def standardize_transactions_columns(
+    transactions: pd.DataFrame,
+) -> pd.DataFrame:
+    '''Standardizes transaction data columns.'''
+
+    return (
+        transactions
+        .loc[:, list(constants.TRANSACTIONS_COLUMNS)]
+        .astype(constants.TRANSACTIONS_COLUMNS)
+    )
+
+
+def date_string_standardizer(
+    format: str,
+) -> Callable[[str], str]:
+    '''Returns a function that standardizes a date string in the given format.
+
+    The given format string should use the `datetime.strptime()` format codes
+    described in the Python docs:
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes.
+    '''
+
+    def standardize_date_string(
+        date: str,
+    ) -> str:
+
+        return str(datetime.datetime.strptime(date, format).date())
+
+    return standardize_date_string

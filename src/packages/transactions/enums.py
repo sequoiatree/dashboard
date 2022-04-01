@@ -7,6 +7,7 @@ class Account(enum.Enum):
     '''Account types.'''
 
     ally = 'ally'
+    chase = 'chase'
 
 
 class Data(enum.Enum):
