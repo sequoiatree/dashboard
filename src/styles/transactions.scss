@@ -80,7 +80,10 @@
         &.account {
           width: 1ch;
           &.account-ally {
-            background: purple;
+            background: #50104a;  // Ally purple.
+          }
+          &.account-chase {
+            background: #ff9900;  // Amazon orange (for Amazon Visa Signature card).
           }
         }
         & > .description {
