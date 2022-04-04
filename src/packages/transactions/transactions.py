@@ -275,6 +275,7 @@ def with_tags(
     is_property_transaction = transactions['clean_description'].isin([
         'RYLAND MEWS MORTGAGE',
         'RYLAND MEWS HOA',
+        'RYLAND MEWS PROPERTY TAX',
         'PG&E',
     ])
     is_other_transaction = ~is_property_transaction
