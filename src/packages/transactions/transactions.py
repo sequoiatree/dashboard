@@ -235,7 +235,7 @@ def with_clean_descriptions(
         .str.replace(r'(?<=\w) (?=\.COM)', '', regex=True)  # Websites.
         .str.replace(r'(?<!\w)\d{3}[- ]?\d{3}[- ]?\d{4}(?!\w)', '', regex=True)  # Phone numbers.
         .str.replace(r'~ FUTURE AMOUNT: \d+(\.\d\d)? ~ TRAN: DDIR$', '', regex=True)  # Direct deposit.
-        .str.replace(r'(, \w\w)+$', '', regex=True)  # City, state, country.
+        .str.replace(r'(, \w{2,3})+$', '', regex=True)  # City, state, country.
         .pipe(clean)
     )
 
