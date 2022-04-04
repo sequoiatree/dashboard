@@ -70,6 +70,7 @@ class Transactions:
             self._transactions
             .append(new_transactions)
             .reset_index(drop=True)
+            .sort_values('date')
         )
         self._postprocessed_transactions = None
 
