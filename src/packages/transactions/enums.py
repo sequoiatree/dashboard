@@ -22,6 +22,6 @@ class Data(enum.Enum):
 class Tag(enum.Enum):
     '''Transaction tags.'''
 
-    car_expense = 'car repairs & mods'
+    car_expense = 'car repair & body work'
     property_expense = 'property expenses'
     spending = 'spending'
