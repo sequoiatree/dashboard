@@ -134,31 +134,45 @@ class Transactions:
             )
 
             totals = totals_by_tag(transactions_for_month)
-            spending = totals[enums.Tag.spending]
 
             return pd.DataFrame([
                 *[
-                    datum(total, tag.value.upper())
-                    for tag, total in totals.items()
+                    datum(totals[tag], tag.value.upper())
+                    for tag in (
+                        enums.Tag.property_expense,
+                        enums.Tag.spending,
+                    )
                 ],
-                datum(*budget_status(monthly_budget, spending)),
+                datum(*budget_status(
+                    monthly_budget,
+                    totals[enums.Tag.spending],
+                )),
             ])
 
         def ytd_metrics(
         ) -> pd.DataFrame:
 
-            ytd_budget = monthly_budget * current_month
+            average = lambda total: total / current_month
 
             totals = totals_by_tag(transactions)
-            spending = totals[enums.Tag.spending]
 
             return pd.DataFrame([
                 *[
-                    datum(total / current_month, f'AVG. {tag.value.upper()}')
-                    for tag, total in totals.items()
-                    if tag is not enums.Tag.spending
+                    datum(average(totals[tag]), f'AVG. {tag.value.upper()}')
+                    for tag in (
+                        enums.Tag.property_expense,
+                    )
                 ],
-                datum(*budget_status(ytd_budget, spending)),
+                *[
+                    datum(totals[tag], tag.value.upper())
+                    for tag in (
+                        enums.Tag.car_expense,
+                    )
+                ],
+                datum(*budget_status(
+                    monthly_budget * current_month,
+                    totals[enums.Tag.spending],
+                )),
             ])
 
         metrics = [
