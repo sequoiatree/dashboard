@@ -101,6 +101,14 @@ class Transactions:
 
         total = lambda transactions: transactions['amount'].sum()
         is_tagged = lambda transactions, tag: transactions[transactions['tag'] == tag.value]
+        totals_by_tag = lambda transactions: {
+            tag: (
+                transactions
+                .pipe(is_tagged, tag=tag)
+                .pipe(total)
+            )
+            for tag in enums.Tag
+        }
         datum = lambda amount, description: {
             'amount': amount,
             'description': description,
@@ -120,20 +128,12 @@ class Transactions:
             month: int,
         ) -> pd.DataFrame:
 
-            for_month = lambda transactions: transactions.pipe(
-                select_recent,
-                since=month,
-                to_present=False,
+            transactions_for_month = (
+                transactions
+                .pipe(select_recent, since=month, to_present=False)
             )
 
-            totals = {
-                tag: total(
-                    transactions
-                    .pipe(for_month)
-                    .pipe(is_tagged, tag=tag)
-                )
-                for tag in enums.Tag
-            }
+            totals = totals_by_tag(transactions_for_month)
             spending = totals[enums.Tag.spending]
 
             return pd.DataFrame([
@@ -149,13 +149,7 @@ class Transactions:
 
             ytd_budget = monthly_budget * current_month
 
-            totals = {
-                tag: total(
-                    transactions
-                    .pipe(is_tagged, tag=tag)
-                )
-                for tag in enums.Tag
-            }
+            totals = totals_by_tag(transactions)
             spending = totals[enums.Tag.spending]
 
             return pd.DataFrame([
