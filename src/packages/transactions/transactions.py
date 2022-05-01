@@ -116,29 +116,6 @@ class Transactions:
 
             return buffer, status
 
-        def ytd_metrics(
-        ) -> pd.DataFrame:
-
-            ytd_budget = monthly_budget * current_month
-
-            totals = {
-                tag: total(
-                    transactions
-                    .pipe(is_tagged, tag=tag)
-                )
-                for tag in enums.Tag
-            }
-            spending = totals[enums.Tag.spending]
-
-            return pd.DataFrame([
-                *[
-                    datum(total / current_month, f'AVG. {tag.value.upper()}')
-                    for tag, total in totals.items()
-                    if tag is not enums.Tag.spending
-                ],
-                datum(*budget_status(ytd_budget, spending)),
-            ])
-
         def month_metrics(
             month: int,
         ) -> pd.DataFrame:
@@ -165,6 +142,29 @@ class Transactions:
                     for tag, total in totals.items()
                 ],
                 datum(*budget_status(monthly_budget, spending)),
+            ])
+
+        def ytd_metrics(
+        ) -> pd.DataFrame:
+
+            ytd_budget = monthly_budget * current_month
+
+            totals = {
+                tag: total(
+                    transactions
+                    .pipe(is_tagged, tag=tag)
+                )
+                for tag in enums.Tag
+            }
+            spending = totals[enums.Tag.spending]
+
+            return pd.DataFrame([
+                *[
+                    datum(total / current_month, f'AVG. {tag.value.upper()}')
+                    for tag, total in totals.items()
+                    if tag is not enums.Tag.spending
+                ],
+                datum(*budget_status(ytd_budget, spending)),
             ])
 
         metrics = [
