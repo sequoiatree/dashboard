@@ -20,7 +20,7 @@ export function decodeTransactions(transactions) {
 
 Handlebars.registerHelper('sign', sign);
 export function sign(amount) {
-    return (parseFloat(amount) >= 0) ? 'positive' : 'negative';
+    return (parseFloat(amount) > 0) ? 'positive' : 'negative';
 }
 
 Handlebars.registerHelper('concat', concat);
