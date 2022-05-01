@@ -25,5 +25,5 @@ export function sign(amount) {
 
 Handlebars.registerHelper('concat', concat);
 export function concat(text) {
-    return text.replace(' ', '');
+    return text.replaceAll(/\W/g, '');
 }
