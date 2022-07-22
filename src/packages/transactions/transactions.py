@@ -116,10 +116,14 @@ class Transactions:
 
         def budget_status(
             budget: float,
-            spending: float,
+            totals: Dict[enums.Tag, float],
         ) -> Tuple[float, str]:
 
-            buffer = budget - abs(spending)
+            buffer = (
+                budget
+                - abs(totals[enums.Tag.spending])
+                + abs(totals[enums.Tag.pocket_profit])
+            )
             status = 'OVER BUDGET' if buffer < 0 else 'WITHIN BUDGET'
 
             return buffer, status
@@ -143,10 +147,7 @@ class Transactions:
                         enums.Tag.spending,
                     )
                 ],
-                datum(*budget_status(
-                    monthly_budget,
-                    totals[enums.Tag.spending],
-                )),
+                datum(*budget_status(monthly_budget, totals)),
             ])
 
         def ytd_metrics(
@@ -169,10 +170,7 @@ class Transactions:
                         enums.Tag.car_expense,
                     )
                 ],
-                datum(*budget_status(
-                    monthly_budget * current_month,
-                    totals[enums.Tag.spending],
-                )),
+                datum(*budget_status(monthly_budget * current_month, totals)),
             ])
 
         metrics = [
@@ -280,16 +278,20 @@ def with_tags(
     tags = pd.Series('', index=transactions.index, dtype='string')
 
     is_expense = transactions['amount'] < 0
+    is_profit = transactions['amount'] > 0
+    is_small_profit = is_profit & (transactions['amount'] < 500)
     is_property_transaction = transactions['clean_description'].isin([
         'RYLAND MEWS MORTGAGE',
         'RYLAND MEWS HOA',
         'RYLAND MEWS PROPERTY TAX',
-        'PG&E',
     ])
-    is_other_transaction = ~is_property_transaction
+    is_venmo_transaction = transactions['description'].str.contains(r'(?<!\w)VENMO(?!\w)', regex=True)
+    is_pocket_profit = is_venmo_transaction & is_small_profit
 
+    tags[is_profit & ~is_pocket_profit] = enums.Tag.income.value
+    tags[is_profit & is_pocket_profit] = enums.Tag.pocket_profit.value
     tags[is_expense & is_property_transaction] = enums.Tag.property_expense.value
-    tags[is_expense & is_other_transaction] = enums.Tag.spending.value
+    tags[is_expense & ~is_property_transaction] = enums.Tag.spending.value
 
     return (
         transactions

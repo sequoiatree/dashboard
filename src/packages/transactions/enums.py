@@ -23,5 +23,7 @@ class Tag(enum.Enum):
     '''Transaction tags.'''
 
     car_expense = 'car repair & body work'
+    income = 'income'
+    pocket_profit = 'pocket profit'
     property_expense = 'property expenses'
     spending = 'spending'
